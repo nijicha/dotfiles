@@ -91,14 +91,13 @@ fi
 
 # Link openssl for rubies in rbenv
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-# export PATH="$(brew --prefix openssl@1.1)/bin:$PATH" # PATCH: for eventpop project puma gem required
 
 # Setup chronium for puppeterr
-export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-export PUPPETEER_EXECUTABLE_PATH=`which chromium`
+# export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# export PUPPETEER_EXECUTABLE_PATH=`which chromium`
 
 # Set file size
-ulimit -n 10240
+# ulimit -n 10240
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
