@@ -1,0 +1,16 @@
+[color]
+    ui = true
+[user]
+    name = Nathakorn Chaninthanadecha
+    email = nathakorn.tonch@gmail.com
+[core]
+    autocrlf = input
+    excludesfile = ${HOME}/.gitignore_global
+    editor = vim
+[pager]
+    branch = cat
+[init]
+    defaultBranch = main
+[ghq]
+    vcs = git
+    root = ~/Workspace/ghq
