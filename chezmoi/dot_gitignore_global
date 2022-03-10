@@ -1,20 +1,14 @@
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
 
-# IntelliJ project files
-.idea
-*.iml
-out
-gen
-
-# Packages
+# Packages #
+############
 # it's better to unpack these files and commit the raw source
 # git has its own built in compression methods
 *.7z
@@ -29,9 +23,19 @@ gen
 # Logs and databases #
 ######################
 *.log
-*.sql
+/*.sql
 *.sqlite
 *.dump
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Redis snapshot
 dump.rdb
@@ -39,7 +43,12 @@ dump.rdb
 .vscode
 .elixir_ls
 
-# Antigen
+.githooks
+.local
+.history
+
+# Antigen #
+###########
 # antigen will compile the choosen themes into .oh-my-zsh/themes folder
 # ignore that file
 .antigen/bundles/robbyrussell/oh-my-zsh/themes/*.antigen-compat

@@ -86,18 +86,21 @@ fi
 
 # User configuration
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+
+# Chezmoi cached variables
+export CM_computer_name={{ .computer_name }}
+export CM_hostname={{ .hostname }}
+
 # Load asdf
 [ -s "/$(brew --prefix asdf)/asdf.sh" ] && . $(brew --prefix asdf)/asdf.sh
 
-# Link openssl for rubies in rbenv
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-
-# Setup chronium for puppeterr
-# export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-# export PUPPETEER_EXECUTABLE_PATH=`which chromium`
-
 # Set file size
-# ulimit -n 10240
+ulimit -n 8192
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
