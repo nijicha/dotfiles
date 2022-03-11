@@ -166,16 +166,16 @@ function prompt_p10k_my_arch() {
   local arch=`uname -m`
   case $arch in
     "arm64" )
-      p10k segment -t "m1" -b 232 -f 7;;
+      p10k segment -t "m1" -b 0 -f 248;;
     "x86_64" )
-      p10k segment -t "intel" -b 232 -f 7;;
+      p10k segment -t "intel" -b 0 -f 248;;
     "arm64e" )
-      p10k segment -t "m1-silicon" -b 232 -f 7;;  
+      p10k segment -t "m1-silicon" -b 0 -f 248;;  
     "x86_64h" )
-      p10k segment -t "intel (haswell)" -b 232 -f 7;;
+      p10k segment -t "intel (haswell)" -b 0 -f 248;;
     "i386" )
-      p10k segment -t "intel-32" -b 232 -f 7;;
+      p10k segment -t "intel-32" -b 0 -f 248;;
     * )
-      p10k segment -t "unknown" -b 5 -f 7;;
+      p10k segment -t "unknown" -b 5 -f 248;;
   esac
 }
