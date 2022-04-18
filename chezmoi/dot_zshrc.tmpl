@@ -61,8 +61,16 @@ else
 fi
 
 # Load Antigen
-. "${HOME}/.dotfiles/libs/antigen.zsh"
-antigen init "${HOME}/.dotfiles/src/antigen/.antigenrc"
+CHEZMOI_TMP_PATH=/tmp/chezmoi_apply
+if [[ ! -f ${CHEZMOI_TMP_PATH}/antigen.zsh ]]; then
+  echo "Pull latest antigen script"
+
+  mkdir $CHEZMOI_TMP_PATH
+  curl -L git.io/antigen > "${CHEZMOI_TMP_PATH}/antigen.zsh"
+fi
+
+. "${CHEZMOI_TMP_PATH}/antigen.zsh"
+antigen init "${HOME}/.antigenrc"
 
 # Load powerlevel10k
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
