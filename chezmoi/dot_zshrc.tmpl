@@ -136,6 +136,8 @@ ulimit -n 8192
 
 # Alias
 
+alias myipaddr="ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'"
+
 # ghq
 alias wsp="cd $(ghq root)"
 alias plgr="cd ~/Workspace/playground"
@@ -170,6 +172,7 @@ function color_table {
     echo
 }
 
+# P10K Apple silicon | Rosetta2 identicator
 function prompt_p10k_my_arch() {
   local arch=`uname -m`
   case $arch in
