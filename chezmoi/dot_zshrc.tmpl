@@ -136,7 +136,7 @@ ulimit -n 8192
 
 # Alias
 
-alias myipaddr="ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'"
+alias loip=get_local_ip_address
 
 # ghq
 alias wsp="cd $(ghq root)"
@@ -152,6 +152,10 @@ alias list_ql_quarantine="xattr -r ${HOME}/Library/QuickLook"
 alias remove_ql_quarantine="xattr -d -r com.apple.quarantine ${HOME}/Library/QuickLook"
 
 # Functions
+function get_local_ip_address {
+   ifconfig | grep 'inet ' | grep -Fv 127.0.0.1 | awk '{print $2}'
+}
+
 # Ref : https://github.com/mbadolato/iTerm2-Color-Schemes/blob/master/tools/screenshotTable.sh
 function color_table {
     T='awesome'   # The test text
