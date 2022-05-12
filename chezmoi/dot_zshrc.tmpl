@@ -64,11 +64,14 @@ else
 fi
 
 # Load Antigen
-CHEZMOI_TMP_PATH=/tmp/chezmoi_apply
+CHEZMOI_TMP_PATH=${HOME}/.local/tmp
 if [[ ! -f ${CHEZMOI_TMP_PATH}/antigen.zsh ]]; then
-  printf >&2 '\033[33mantigen\033[0m: ▼ Pull latest antigen script...\n'
+  printf >&2 "\033[33mantigen\033[0m: ▼ Pull latest antigen script...\n"
 
-  mkdir $CHEZMOI_TMP_PATH
+  if [[ ! -d $CHEZMOI_TMP_PATH ]]; then
+    mkdir $CHEZMOI_TMP_PATH
+  fi
+
   curl -L git.io/antigen > "${CHEZMOI_TMP_PATH}/antigen.zsh"
 fi
 
