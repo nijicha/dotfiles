@@ -1,0 +1,190 @@
+# Personal Zsh configuration file. It is strongly recommended to keep all
+# shell customization and configuration (including exported environment
+# variables such as PATH) in this file or in files sourced from it.
+#
+# Documentation: https://github.com/romkatv/zsh4humans/blob/v5/README.md.
+
+# Periodic auto-update on Zsh startup: 'ask' or 'no'.
+# You can manually run `z4h update` to update everything.
+zstyle ':z4h:' auto-update      'no'
+# Ask whether to auto-update this often; has no effect if auto-update is 'no'.
+zstyle ':z4h:' auto-update-days '28'
+
+# Keyboard type: 'mac' or 'pc'.
+zstyle ':z4h:bindkey' keyboard  'mac'
+
+# Don't start tmux.
+zstyle ':z4h:' start-tmux       no
+
+# Mark up shell's output with semantic information.
+zstyle ':z4h:' term-shell-integration 'yes'
+
+# Right-arrow key accepts one character ('partial-accept') from
+# command autosuggestions or the whole thing ('accept')?
+zstyle ':z4h:autosuggestions' forward-char 'accept'
+
+# Recursively traverse directories when TAB-completing files.
+zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+
+# Enable direnv to automatically source .envrc files.
+zstyle ':z4h:direnv'         enable 'no'
+# Show "loading" and "unloading" notifications from direnv.
+zstyle ':z4h:direnv:success' notify 'yes'
+
+# Enable ('yes') or disable ('no') automatic teleportation of z4h over
+# SSH when connecting to these hosts.
+zstyle ':z4h:ssh:example-hostname1'   enable 'yes'
+zstyle ':z4h:ssh:*.example-hostname2' enable 'no'
+# The default value if none of the overrides above match the hostname.
+zstyle ':z4h:ssh:*'                   enable 'no'
+
+# Send these files over to the remote host when connecting over SSH to the
+# enabled hosts.
+zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
+
+# Clone additional Git repositories from GitHub.
+#
+# This doesn't do anything apart from cloning the repository and keeping it
+# up-to-date. Cloned files can be used after `z4h init`. This is just an
+# example. If you don't plan to use Oh My Zsh, delete this line.
+z4h install ohmyzsh/ohmyzsh || return
+
+# Install or update core components (fzf, zsh-autosuggestions, etc.) and
+# initialize Zsh. After this point console I/O is unavailable until Zsh
+# is fully initialized. Everything that requires user interaction or can
+# perform network I/O must be done above. Everything else is best done below.
+z4h init || return
+
+# Extend PATH.
+path=(~/bin $path)
+
+# Configure PATH
+
+# Set ANDROID_HOME PATH
+ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+
+# Set Jetbrains Toolbox App PATH
+export PATH="$PATH:/Users/nijicha/Library/Application Support/JetBrains/Toolbox/scripts"
+
+# Resolve Homebrew PATH for Apple M1
+if [ "$(uname -m)" = "arm64" ]; then
+  # Use arm64 brew, with fallback to x86 brew
+  if [ -f /opt/homebrew/bin/brew ]; then
+    export PATH="/usr/local/bin${PATH+:$PATH}";
+    eval $(/opt/homebrew/bin/brew shellenv)
+  fi
+else
+  # Use x86 brew, with fallback to arm64 brew
+  if [ -f /usr/local/bin/brew ]; then
+    export PATH="/opt/homebrew/bin${PATH+:$PATH}";
+    eval $(/usr/local/bin/brew shellenv)
+  fi
+fi
+
+# Export environment variables.
+export GPG_TTY=$TTY
+
+export CM_computer_name={{ .computer_name }}
+export CM_hostname={{ .hostname }}
+
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
+# Source additional local files if they exist.
+z4h source ~/.env.zsh
+
+# asdf-vm
+z4h source /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# google-cloud-sdk
+z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+
+# Use additional Git repositories pulled in with `z4h install`.
+#
+# This is just an example that you should delete. It does nothing useful.
+z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
+z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+
+# Define key bindings.
+z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
+z4h bindkey redo Option+/            # redo the last undone command line change
+
+z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
+z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
+z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
+z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
+
+# Autoload functions.
+autoload -Uz zmv
+
+# Define functions and completions.
+function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
+compdef _directories md
+
+function get_local_ip_address {
+   ifconfig | grep 'inet ' | grep -Fv 127.0.0.1 | awk '{print $2}'
+}
+
+# Ref : https://github.com/mbadolato/iTerm2-Color-Schemes/blob/master/tools/screenshotTable.sh
+function color_table {
+    T='awesome'   # The test text
+
+    echo -e "\n                 40m     41m     42m     43m\
+        44m     45m     46m     47m";
+
+    for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
+            '1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' \
+            '  36m' '1;36m' '  37m' '1;37m';
+    do FG=${FGs// /}
+    echo -en " $FGs \033[$FG  $T  "
+    for BG in 40m 41m 42m 43m 44m 45m 46m 47m;
+        do echo -en "$EINS \033[$FG\033[$BG  $T  \033[0m";
+    done
+    echo;
+    done
+    echo
+}
+
+function prompt_p10k_my_arch() {
+  local arch=`uname -m`
+  case $arch in
+    "arm64" )
+      p10k segment -t "m1" -b 0 -f 248;;
+    "x86_64" )
+      p10k segment -t "intel" -b 0 -f 248;;
+    "arm64e" )
+      p10k segment -t "m1-silicon" -b 0 -f 248;;
+    "x86_64h" )
+      p10k segment -t "intel (haswell)" -b 0 -f 248;;
+    "i386" )
+      p10k segment -t "intel-32" -b 0 -f 248;;
+    * )
+      p10k segment -t "unknown" -b 5 -f 248;;
+  esac
+}
+
+# RSpec file size
+ulimit -n 8192
+
+# Define named directories: ~w <=> Windows home directory on WSL.
+[[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
+
+# Define aliases.
+alias tree='tree -a -I .git'
+alias plgr="cd ~/Workspace/playground"
+alias wsp="cd $(ghq root)"
+
+RELAUNCH_FINDER="killall Finder /System/Library/CoreServices/Finder.app"
+alias show_dot_files="defaults write com.apple.finder AppleShowAllFiles YES; eval $RELAUNCH_FINDER"
+alias hide_dot_files="defaults write com.apple.finder AppleShowAllFiles NO; eval $RELAUNCH_FINDER"
+
+alias list_ql_quarantine="xattr -r ${HOME}/Library/QuickLook"
+alias remove_ql_quarantine="xattr -d -r com.apple.quarantine ${HOME}/Library/QuickLook"
+
+# Add flags to existing aliases.
+alias ls="${aliases[ls]:-ls} -A"
+
+# Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
+setopt glob_dots     # no special treatment for file names with a leading dot
+setopt no_auto_menu  # require an extra TAB press to open the completion menu

@@ -1,0 +1,25 @@
+{{- $name := "Nathakorn Chaninthanadecha" -}}
+{{- $email := "nathakorn.tonch@gmail.com" -}}
+{{- $github_user := "nijicha" -}}
+{{- $hostname := default "nijicha" (env "CM_hostname") -}}
+{{- $computer_name := default "nijicha MacBook Pro" (env "CM_computer_name") -}}
+{{- $asdf_version := "0.10.2" -}}
+{{- $gpg_recipient := "" -}}
+
+{{- if (env "ASK") }}
+{{-   $name = promptString "Full Name" $name -}}
+{{-   $email = promptString "Email" $email -}}
+{{-   $github_user = promptString "GitHub Username" $github_user -}}
+{{-   $computer_name = promptString "Computer Name" $computer_name -}}
+{{-   $hostname = promptString "Hostname" $hostname -}}
+{{-   $asdf_version = promptString "Asdf Version" $asdf_version -}}
+{{-   $gpg_recipient = promptString "GPG Recipient" $gpg_recipient -}}
+{{- end }}
+
+data:
+  name: {{ $name | quote }}
+  email: {{ $email | quote }}
+  github_user: {{ $github_user | quote }}
+  hostname: {{ $hostname | quote }}
+  computer_name: {{ $computer_name | quote }}
+  asdf_version: {{ $asdf_version | quote }}

@@ -1,0 +1,26 @@
+[color]
+    ui = true
+[user]
+    name = {{ .name }}
+    email = {{ .email }}
+[core]
+    autocrlf = input
+    excludesfile = ${HOME}/.gitignore_global
+    editor = vim
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    light = false
+    line-numbers = true
+    side-by-side = true
+[merge]
+    conflictstyle = diff3
+[diff]
+    colorMoved = default
+[init]
+    defaultBranch = main
+[ghq]
+    vcs = git
+    root = ~/Workspace/ghq
