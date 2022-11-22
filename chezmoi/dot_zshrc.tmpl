@@ -19,6 +19,9 @@ zstyle ':z4h:' start-tmux       no
 # Mark up shell's output with semantic information.
 zstyle ':z4h:' term-shell-integration 'yes'
 
+# Prompt at bottom of terminal
+# zstyle ':z4h:' prompt-at-bottom 'yes'
+
 # Right-arrow key accepts one character ('partial-accept') from
 # command autosuggestions or the whole thing ('accept')?
 zstyle ':z4h:autosuggestions' forward-char 'accept'
@@ -44,6 +47,9 @@ zstyle ':z4h:ssh:*'                   enable 'no'
 # Send these files over to the remote host when connecting over SSH to the
 # enabled hosts.
 zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
+
+# Mark up shell's output with semantic information.
+zstyle ':z4h:' term-shell-integration 'yes'
 
 # Clone additional Git repositories from GitHub.
 #
@@ -89,6 +95,9 @@ else
 fi
 
 # Export environment variables.
+export ONEPASSWORD_SUBDOMAIN="my"
+export EMAIL={{ .email }}
+
 export GPG_TTY=$TTY
 
 export CHEZMOI_SOURCE_PATH="$(chezmoi source-path)"
@@ -104,7 +113,6 @@ z4h source ~/.env.zsh
 z4h source -- ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh}
 
 # google-cloud-sdk
-z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 
 # Use additional Git repositories pulled in with `z4h install`.
@@ -198,6 +206,7 @@ ulimit -n 8192
 
 # Define aliases.
 alias la='lsd -lA'
+
 alias plgr="cd ~/Workspace/playground"
 alias wsp="cd $(ghq root)"
 
