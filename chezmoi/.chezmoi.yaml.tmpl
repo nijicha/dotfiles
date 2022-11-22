@@ -23,3 +23,11 @@ data:
   hostname: {{ $hostname | quote }}
   computer_name: {{ $computer_name | quote }}
   asdf_version: {{ $asdf_version | quote }}
+
+edit:
+  command: code
+  args: --wait
+
+diff:
+  command: delta
+  pager: delta
