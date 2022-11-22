@@ -129,6 +129,19 @@ autoload -Uz zmv
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
+function zsh_directory_name() {
+  emulate -L zsh
+  [[ $1 == d ]] || return
+  while [[ $2 != / ]]; do
+    if [[ -e $2/.git ]]; then
+      typeset -ga reply=(${2:t} $#2)
+      return
+    fi
+    2=${2:h}
+  done
+  return 1
+}
+
 function get_local_ip_address {
    ifconfig | grep 'inet ' | grep -Fv 127.0.0.1 | awk '{print $2}'
 }
@@ -196,6 +209,7 @@ alias list_ql_quarantine="xattr -r ${HOME}/Library/QuickLook"
 alias remove_ql_quarantine="xattr -d -r com.apple.quarantine ${HOME}/Library/QuickLook"
 
 # Add flags to existing aliases.
+alias cat="${aliases[cat]:-bat} -P"
 alias ls="${aliases[ls]:-ls} -A"
 alias tree="${aliases[tree]:-tree} -a -I '.git|.idea|node_modules'"
 
