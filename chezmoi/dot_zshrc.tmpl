@@ -175,7 +175,7 @@ ulimit -n 8192
 [[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
 
 # Define aliases.
-alias tree='tree -a -I .git'
+alias la='lsd -lA'
 alias plgr="cd ~/Workspace/playground"
 alias wsp="cd $(ghq root)"
 
@@ -188,6 +188,7 @@ alias remove_ql_quarantine="xattr -d -r com.apple.quarantine ${HOME}/Library/Qui
 
 # Add flags to existing aliases.
 alias ls="${aliases[ls]:-ls} -A"
+alias tree="${aliases[tree]:-tree} -a -I '.git|.idea|node_modules'"
 
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot
