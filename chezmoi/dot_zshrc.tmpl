@@ -23,6 +23,9 @@ zstyle ':z4h:' term-shell-integration 'yes'
 # command autosuggestions or the whole thing ('accept')?
 zstyle ':z4h:autosuggestions' forward-char 'accept'
 
+# Colorize fzf completing files
+zstyle ':z4h:*' fzf-flags --color=hl:220,hl+:220
+
 # Recursively traverse directories when TAB-completing files.
 zstyle ':z4h:fzf-complete' recurse-dirs 'no'
 
@@ -98,7 +101,7 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 z4h source ~/.env.zsh
 
 # asdf-vm
-z4h source /opt/homebrew/opt/asdf/libexec/asdf.sh
+z4h source -- ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh}
 
 # google-cloud-sdk
 z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
@@ -130,8 +133,14 @@ function get_local_ip_address {
    ifconfig | grep 'inet ' | grep -Fv 127.0.0.1 | awk '{print $2}'
 }
 
+function colors_swatch {
+  for i in {0..255}; do
+    print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'};
+  done
+}
+
 # Ref : https://github.com/mbadolato/iTerm2-Color-Schemes/blob/master/tools/screenshotTable.sh
-function color_table {
+function colors_table {
     T='awesome'   # The test text
 
     echo -e "\n                 40m     41m     42m     43m\
