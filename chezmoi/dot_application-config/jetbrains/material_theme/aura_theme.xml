@@ -1,0 +1,25 @@
+<mtTheme>
+  <fileId>custom</fileId>
+  <themeId>aura_theme</themeId>
+  <name>Aura Theme</name>
+  <editorColorsScheme>Aura-dark-color-theme</editorColorsScheme>
+  <dark>true</dark>
+  <colors>
+    <color id="background" value="15141bff"/>
+    <color id="foreground" value="edeceeff"/>
+    <color id="text" value="6d6d6dff"/>
+    <color id="highlight" value="29263cff"/>
+    <color id="selectionBackground" value="3d375e7f"/>
+    <color id="selectionForeground" value="edeceeff"/>
+    <color id="button" value="15141bff"/>
+    <color id="secondaryBackground" value="15141bff"/>
+    <color id="disabled" value="6d6d6dff"/>
+    <color id="contrast" value="15141bff"/>
+    <color id="tableSelected" value="3d375e7f"/>
+    <color id="secondBorder" value="3d375e7f"/>
+    <color id="treeSelection" value="3d375e50"/>
+    <color id="notifications" value="29263cff"/>
+    <color id="accent" value="61ffcaff"/>
+    <color id="excluded" value="29263cff"/>
+  </colors>
+</mtTheme>
