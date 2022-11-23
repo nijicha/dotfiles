@@ -20,7 +20,7 @@ zstyle ':z4h:' start-tmux       no
 zstyle ':z4h:' term-shell-integration 'yes'
 
 # Prompt at bottom of terminal
-# zstyle ':z4h:' prompt-at-bottom 'yes'
+zstyle ':z4h:' prompt-at-bottom 'yes'
 
 # Right-arrow key accepts one character ('partial-accept') from
 # command autosuggestions or the whole thing ('accept')?
@@ -57,15 +57,13 @@ zstyle ':z4h:' term-shell-integration 'yes'
 # up-to-date. Cloned files can be used after `z4h init`. This is just an
 # example. If you don't plan to use Oh My Zsh, delete this line.
 z4h install ohmyzsh/ohmyzsh || return
+z4h install mollifier/cd-gitroot || return
 
 # Install or update core components (fzf, zsh-autosuggestions, etc.) and
 # initialize Zsh. After this point console I/O is unavailable until Zsh
 # is fully initialized. Everything that requires user interaction or can
 # perform network I/O must be done above. Everything else is best done below.
 z4h init || return
-
-# Extend PATH.
-path=(~/bin $path)
 
 # Configure PATH
 
@@ -78,6 +76,9 @@ export FVM_HOME="$HOME/.fvm"
 
 # Set Jetbrains Toolbox App PATH
 export PATH="$PATH:/Users/nijicha/Library/Application Support/JetBrains/Toolbox/scripts"
+
+# Set .local PATH
+# export PATH="$PATH:${HOME}/.local/bin"
 
 # Resolve Homebrew PATH for Apple M1
 if [ "$(uname -m)" = "arm64" ]; then
@@ -93,6 +94,9 @@ else
     eval $(/usr/local/bin/brew shellenv)
   fi
 fi
+
+# Extend PATH.
+path=(~/bin $path)
 
 # Export environment variables.
 export ONEPASSWORD_SUBDOMAIN="my"
@@ -118,8 +122,9 @@ z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/comp
 # Use additional Git repositories pulled in with `z4h install`.
 #
 # This is just an example that you should delete. It does nothing useful.
-z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
-z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+# z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
+# z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+z4h load mollifier/cd-gitroot
 
 # Define key bindings.
 z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
@@ -200,6 +205,30 @@ function prompt_p10k_my_arch() {
   esac
 }
 
+# Timing App Terminal Support
+if [ $ITERM_SESSION_ID ]; then
+  DISABLE_AUTO_TITLE="true"
+  echo -ne "\033]0; @ ${HOST%%.*} : ${PWD/#$HOME/~} \007"
+fi
+
+# https://unix.stackexchange.com/questions/273861/unlimited-history-in-zsh
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000000
+SAVEHIST=10000000
+setopt BANG_HIST                 # Treat the '!' character specially during expansion.
+setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
+setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
+setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
+setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
+setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
+setopt HIST_BEEP   
+
 # RSpec file size
 ulimit -n 8192
 
@@ -208,6 +237,8 @@ ulimit -n 8192
 
 # Define aliases.
 alias la='lsd -lA'
+
+alias ggr='cd-gitroot'
 
 alias plgr="cd ~/Workspace/playground"
 alias wsp="cd $(ghq root)"
