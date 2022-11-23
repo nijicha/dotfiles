@@ -137,22 +137,11 @@ autoload -Uz zmv
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
-function zsh_directory_name() {
-  emulate -L zsh
-  [[ $1 == d ]] || return
-  while [[ $2 != / ]]; do
-    if [[ -e $2/.git ]]; then
-      typeset -ga reply=(${2:t} $#2)
-      return
-    fi
-    2=${2:h}
-  done
-  return 1
-}
-
 function get_local_ip_address {
    ifconfig | grep 'inet ' | grep -Fv 127.0.0.1 | awk '{print $2}'
 }
+
+# Fancy function
 
 function colors_swatch {
   for i in {0..255}; do
@@ -178,6 +167,19 @@ function colors_table {
     echo;
     done
     echo
+}
+
+function zsh_directory_name() {
+  emulate -L zsh
+  [[ $1 == d ]] || return
+  while [[ $2 != / ]]; do
+    if [[ -e $2/.git ]]; then
+      typeset -ga reply=(${2:t} $#2)
+      return
+    fi
+    2=${2:h}
+  done
+  return 1
 }
 
 function prompt_p10k_my_arch() {
