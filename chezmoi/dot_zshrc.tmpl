@@ -71,8 +71,12 @@ z4h init || return
 ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 
+# Set curl path
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+
 # Set FVM & Flutter
 export FVM_HOME="$HOME/.fvm"
+export JAVA_HOME="/Users/nijicha/Library/Application Support/JetBrains/Toolbox/apps/AndroidStudio/ch-0/221.6008.13.2211.9514443/Android Studio.app/Contents/jbr/Contents/Home"
 
 # Set Jetbrains Toolbox App PATH
 export PATH="$PATH:/Users/nijicha/Library/Application Support/JetBrains/Toolbox/scripts"
@@ -118,6 +122,7 @@ z4h source ~/.env.zsh
 z4h source -- ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh}
 
 # google-cloud-sdk
+z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 
 # Use additional Git repositories pulled in with `z4h install`.
@@ -259,3 +264,5 @@ alias tree="${aliases[tree]:-tree} -a -I '.git|.idea|node_modules'"
 # Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
 setopt glob_dots     # no special treatment for file names with a leading dot
 setopt no_auto_menu  # require an extra TAB press to open the completion menu
+
+source /Users/nijicha/.docker/init-zsh.sh || true # Added by Docker Desktop
