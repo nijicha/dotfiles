@@ -127,25 +127,19 @@
 				<key>key</key>
 				<string>1</string>
 				<key>uuid</key>
-				<string>90285033-A7E6-4A17-AB5A-8FB881C21881</string>
+				<string>48DCA7A2-E360-4F04-BCE4-CDC175976F30</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>2</string>
 				<key>uuid</key>
-				<string>335C8206-1A8D-4263-8751-702969C5A1B9</string>
+				<string>4C412680-E623-45A1-B496-4173963EEE99</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>4</string>
 				<key>uuid</key>
-				<string>E04638FF-F48E-49B6-9A59-86F9E42EC4E0</string>
-			</dict>
-			<dict>
-				<key>key</key>
-				<string>9</string>
-				<key>uuid</key>
-				<string>79425CFA-E8CA-400A-B3C8-F50232DB990E</string>
+				<string>981246F0-5583-4D95-9DD9-A4C25701112D</string>
 			</dict>
 		</array>
 		<key>Disks_DropdownOrderDisabled</key>
@@ -303,6 +297,7 @@
 		<key>StatusItems-Order</key>
 		<array>
 			<integer>8</integer>
+			<integer>7</integer>
 		</array>
 		<key>Theme-SeperateStyles</key>
 		<true/>
@@ -383,11 +378,11 @@
 				<key>format</key>
 				<array>
 					<array>
+						<string>EE</string>
+						<string>' '</string>
 						<string>hh</string>
 						<string>':'</string>
 						<string>mm</string>
-						<string>' • '</string>
-						<string>EE</string>
 						<string>' '</string>
 						<string>___ICON__ORANGE___</string>
 					</array>
@@ -445,6 +440,12 @@
 		<key>Weather_MenubarMode</key>
 		<array>
 			<dict>
+				<key>mode</key>
+				<integer>2</integer>
+				<key>uuid</key>
+				<string>8131535E-285B-418E-A7F6-5BB5F51C3015</string>
+			</dict>
+			<dict>
 				<key>bottom</key>
 				<integer>5</integer>
 				<key>mode</key>
@@ -454,21 +455,15 @@
 				<key>uuid</key>
 				<string>3B9EB49B-0F4F-4C3F-9190-11D0950EAEB4</string>
 			</dict>
-			<dict>
-				<key>mode</key>
-				<integer>2</integer>
-				<key>uuid</key>
-				<string>8131535E-285B-418E-A7F6-5BB5F51C3015</string>
-			</dict>
 		</array>
 		<key>Zarya-TLE</key>
 		<dict>
 			<key>time</key>
-			<real>1679392865.331687</real>
+			<real>1679746990.1238179</real>
 			<key>tle</key>
 			<string>ISS (ZARYA)             
-1 25544U 98067A   23080.26813490  .00015338  00000+0  28250-3 0  9995
-2 25544  51.6415  44.1101 0006135 114.9983  27.6264 15.49342139388158</string>
+1 25544U 98067A   23084.20248098  .00020046  00000+0  36450-3 0  9992
+2 25544  51.6422  24.6365 0005913 125.8938  16.6510 15.49500614388768</string>
 		</dict>
 	</dict>
 	<key>version</key>
