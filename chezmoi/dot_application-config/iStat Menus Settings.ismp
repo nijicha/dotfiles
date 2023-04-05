@@ -378,12 +378,6 @@
 				<key>format</key>
 				<array>
 					<array>
-						<string>EE</string>
-						<string>' '</string>
-						<string>hh</string>
-						<string>':'</string>
-						<string>mm</string>
-						<string>' '</string>
 						<string>___ICON__ORANGE___</string>
 					</array>
 					<array>
@@ -459,11 +453,11 @@
 		<key>Zarya-TLE</key>
 		<dict>
 			<key>time</key>
-			<real>1679746990.1238179</real>
+			<real>1680649886.0949631</real>
 			<key>tle</key>
 			<string>ISS (ZARYA)             
-1 25544U 98067A   23084.20248098  .00020046  00000+0  36450-3 0  9992
-2 25544  51.6422  24.6365 0005913 125.8938  16.6510 15.49500614388768</string>
+1 25544U 98067A   23094.83671916  .00021365  00000+0  38768-3 0  9990
+2 25544  51.6424 331.9880 0007116 153.8989 309.0266 15.49508921390411</string>
 		</dict>
 	</dict>
 	<key>version</key>
