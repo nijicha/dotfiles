@@ -122,8 +122,8 @@ z4h source ~/.env.zsh
 z4h source -- ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh}
 
 # google-cloud-sdk
-z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-z4h source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+z4h source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+z4h source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
 
 # Use additional Git repositories pulled in with `z4h install`.
 #
