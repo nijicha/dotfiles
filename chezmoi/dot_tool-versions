@@ -1,5 +1,5 @@
 yarn 1.22.19
-nodejs lts
+nodejs 18.16.0
 ruby 3.1.2
 python 3.9.15
-golang 1.19.5
+golang 1.20.4
