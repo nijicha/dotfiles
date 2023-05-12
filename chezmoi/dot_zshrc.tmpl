@@ -76,6 +76,11 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 
 # Set FVM & Flutter
 export FVM_HOME="$HOME/.fvm"
+
+# For bundled java from Android Studio
+# export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+
+# For standalone JAVA which installed via Homebrew or package installer
 # export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
 
 # Set Jetbrains Toolbox App PATH
@@ -103,6 +108,9 @@ fi
 path=(~/bin $path)
 
 # Export environment variables.
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 export ONEPASSWORD_SUBDOMAIN="my"
 export EMAIL={{ .email }}
 
