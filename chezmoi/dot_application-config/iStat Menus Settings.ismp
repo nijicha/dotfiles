@@ -80,45 +80,39 @@
 		<array>
 			<dict>
 				<key>key</key>
-				<string>9</string>
-				<key>uuid</key>
-				<string>E7A4AD30-BE4E-40E0-B564-0D7812F4E34E</string>
-			</dict>
-			<dict>
-				<key>key</key>
 				<string>1</string>
 				<key>uuid</key>
-				<string>7855F1FB-7916-4ECF-8390-29C7E0B519D6</string>
+				<string>9A6F2CC1-DA9F-4EB2-A608-A648FB8B9E36</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>2</string>
 				<key>uuid</key>
-				<string>19550C8F-216C-416D-BA01-D9EAD887131C</string>
+				<string>520DEB07-7A46-4DA7-A886-30A0E7CC413B</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>3</string>
 				<key>uuid</key>
-				<string>1E80571C-E7F1-417F-978B-48D22E276557</string>
+				<string>607502FB-ED2E-4F1B-99C8-5C007F9B032C</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>4</string>
 				<key>uuid</key>
-				<string>CB4CCA70-C479-4507-9877-4B22387353F7</string>
+				<string>36FE0883-F838-447C-813A-6204BEC8E3FC</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>5</string>
 				<key>uuid</key>
-				<string>41D789CB-BC97-4DA1-A3E6-1AF48CBC2FD6</string>
+				<string>D4A0059C-008A-442A-B56D-447D1B2FC1BB</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>6</string>
 				<key>uuid</key>
-				<string>654999A2-050B-499B-863A-FDF8419F21DD</string>
+				<string>A7D17A45-6B42-40B1-99B4-1BF5BFAD514F</string>
 			</dict>
 		</array>
 		<key>CombinedMenubarDisplayMode</key>
@@ -378,7 +372,8 @@
 				<key>format</key>
 				<array>
 					<array>
-						<string>___ICON__ORANGE___</string>
+						<string>EE</string>
+						<string>___ICON__TRANSPARENT___</string>
 					</array>
 					<array>
 						<string>___ICON__MOON___</string>
@@ -411,12 +406,6 @@
 				<string>aeris</string>
 				<key>name</key>
 				<string>Aeris Weather</string>
-			</dict>
-			<dict>
-				<key>key</key>
-				<string>darksky</string>
-				<key>name</key>
-				<string>Dark Sky</string>
 			</dict>
 			<dict>
 				<key>key</key>
@@ -453,14 +442,15 @@
 		<key>Zarya-TLE</key>
 		<dict>
 			<key>time</key>
-			<real>1683029077.940732</real>
+			<real>1695189526.2454441</real>
 			<key>tle</key>
 			<string>ISS (ZARYA)             
-1 25544U 98067A   23122.17237432  .00014069  00000+0  25531-3 0  9997
-2 25544  51.6399 196.5813 0005836 294.9279 154.2645 15.49847488394654</string>
+1 25544U 98067A   23263.11115209  .00015586  00000+0  28599-3 0  9996
+2 25544  51.6413 218.3335 0005865  37.4601  52.8673 15.49438061416511
+</string>
 		</dict>
 	</dict>
 	<key>version</key>
-	<string>6.70</string>
+	<string>6.71</string>
 </dict>
 </plist>
