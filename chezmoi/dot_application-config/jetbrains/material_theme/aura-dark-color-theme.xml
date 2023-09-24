@@ -1,7 +1,7 @@
 <mtTheme>
   <fileId>custom</fileId>
-  <themeId>aura_theme</themeId>
-  <name>Aura Theme</name>
+  <themeId>aura-dark-color-theme</themeId>
+  <name>Aura-dark-color-theme</name>
   <editorColorsScheme>Aura-dark-color-theme</editorColorsScheme>
   <dark>true</dark>
   <colors>
