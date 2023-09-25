@@ -1,4 +1,5 @@
 1password-cli
+bartender
 brooklyn
 cleanshot
 clickup
