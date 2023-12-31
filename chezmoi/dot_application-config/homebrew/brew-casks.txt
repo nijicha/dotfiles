@@ -9,6 +9,7 @@ epic-games
 figma
 folx
 font-fantasque-sans-mono-nerd-font
+font-monaspace
 google-cloud-sdk
 google-drive
 iina
@@ -17,11 +18,12 @@ iterm2
 jetbrains-toolbox
 karabiner-elements
 messenger
+ngrok
 notion
 numi
 obsidian
 postman
-responsively
+rectangle
 shortcat
 slack
 spotify

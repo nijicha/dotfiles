@@ -2,11 +2,11 @@ asdf: Extendable version manager with support for Ruby, Node.js, Erlang & more
 bat: Clone of cat(1) with syntax highlighting and Git integration
 chezmoi: Manage your dotfiles across multiple diverse machines, securely
 curl: Get a file from an HTTP, HTTPS or FTP server
+fbthrift: Facebook's branch of Apache Thrift, including a new C++ server
 ghq: Remote repository management made easy
 git: Distributed revision control system
 git-delta: Syntax-highlighting pager for git and diff output
 git-standup: Git extension to generate reports for standup meetings
-gnupg: GNU Pretty Good Privacy (PGP) package
 helm: Kubernetes package manager
 heroku: Everything you need to get started with Heroku
 heroku-node: node.js dependency for heroku
@@ -14,6 +14,7 @@ ios-deploy: Install and debug iPhone apps from the command-line
 displayplacer: macOS command line utility to configure multi-display resolutions and arrangements. Essentially XRandR for macOS.
 kdoctor: Environment diagnostics for Kotlin Multiplatform Mobile app development
 fvm: Simple cli to manage Flutter SDK versions per project
+libgsf: I/O abstraction library for dealing with structured file formats
 lsd: Clone of ls with colorful output, file type icons, and more
 mac-cleanup-py: Python cleanup script for macOS
 mas: Mac App Store command-line interface
@@ -23,5 +24,6 @@ railway: Develop and deploy code with zero configuration
 tree: Display directories as trees (with optional color/HTML output)
 vips: Image processing library
 watchman: Watch files and take action when they change
+xmlto: Convert XML to another format (based on XSL or other tools)
 zlib: General-purpose lossless data-compression library
 zsh: UNIX shell (command interpreter)
