@@ -2739,6 +2739,8 @@
 	<string>35E028FB-65E9-4185-B482-44254A0351F1</string>
 	<key>EnableAPIServer</key>
 	<true/>
+	<key>EnterCopyModeAutomatically</key>
+	<false/>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
 	<key>HotkeyMigratedFromSingleToMulti</key>
@@ -3558,13 +3560,13 @@
 			<key>Name</key>
 			<string>Aura Theme</string>
 			<key>Non Ascii Font</key>
-			<string>MesloLGS-NF-Regular 16</string>
+			<string>FantasqueSansMNFM-Regular 18</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -4491,7 +4493,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -5332,7 +5334,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -6223,7 +6225,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -7106,7 +7108,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -8027,7 +8029,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -8868,7 +8870,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -9701,7 +9703,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -10603,7 +10605,7 @@
 			<key>Non-ASCII Ligatures</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MonaspaceRadon-Medium 16</string>
+			<string>MonaspiceRnNFM-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>

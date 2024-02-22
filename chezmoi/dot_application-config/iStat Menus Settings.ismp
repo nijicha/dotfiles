@@ -69,9 +69,15 @@
 		<array>
 			<dict>
 				<key>key</key>
-				<string>1</string>
+				<string>6</string>
 				<key>uuid</key>
-				<string>0365D88C-DAEA-4FAA-95D7-C849804B9F48</string>
+				<string>A881842C-C54A-4C56-975E-4980492D085E</string>
+			</dict>
+			<dict>
+				<key>key</key>
+				<string>9</string>
+				<key>uuid</key>
+				<string>70683C67-BB2A-4D03-9015-77FDE548BF24</string>
 			</dict>
 		</array>
 		<key>CPU_ProcessCount</key>
@@ -121,19 +127,25 @@
 				<key>key</key>
 				<string>1</string>
 				<key>uuid</key>
-				<string>48DCA7A2-E360-4F04-BCE4-CDC175976F30</string>
+				<string>BE03282C-E6D1-45BD-B794-61B2FC116422</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>2</string>
 				<key>uuid</key>
-				<string>4C412680-E623-45A1-B496-4173963EEE99</string>
+				<string>8C0A00A2-3913-46A2-A753-303BAC45DDB4</string>
+			</dict>
+			<dict>
+				<key>key</key>
+				<string>3</string>
+				<key>uuid</key>
+				<string>BE6AD3CE-170E-40EA-9A71-D119AD808151</string>
 			</dict>
 			<dict>
 				<key>key</key>
 				<string>4</string>
 				<key>uuid</key>
-				<string>981246F0-5583-4D95-9DD9-A4C25701112D</string>
+				<string>E761374D-E07A-4FD5-93B0-D5778C773CB6</string>
 			</dict>
 		</array>
 		<key>Disks_DropdownOrderDisabled</key>
@@ -144,7 +156,7 @@
 				<key>boot</key>
 				<true/>
 				<key>key</key>
-				<string>CAFBC4F6-7A54-4F2B-AA13-92FA7DA71CF3</string>
+				<string>5982F41A-8E4C-4002-9A59-7917A8C5D349</string>
 				<key>name</key>
 				<string>Macintosh HD</string>
 			</dict>
@@ -290,8 +302,8 @@
 		</array>
 		<key>StatusItems-Order</key>
 		<array>
-			<integer>8</integer>
 			<integer>7</integer>
+			<integer>8</integer>
 		</array>
 		<key>Theme-SeperateStyles</key>
 		<true/>
@@ -442,11 +454,11 @@
 		<key>Zarya-TLE</key>
 		<dict>
 			<key>time</key>
-			<real>1701446304.4235101</real>
+			<real>1706225915.2202349</real>
 			<key>tle</key>
 			<string>ISS (ZARYA)             
-1 25544U 98067A   23335.33606575  .00019842  00000+0  35462-3 0  9997
-2 25544  51.6423 220.6499 0001037   7.4772 104.3112 15.50011613427719
+1 25544U 98067A   24025.71264590  .00025722  00000+0  45835-3 0  9992
+2 25544  51.6418 306.2901 0004869 129.3313 315.7607 15.49921677436303
 </string>
 		</dict>
 	</dict>
