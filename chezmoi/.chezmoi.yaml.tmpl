@@ -1,6 +1,7 @@
 {{- $name := "Nathakorn Chaninthanadecha" -}}
 {{- $email := "nathakorn.tonch@gmail.com" -}}
 {{- $github_user := "nijicha" -}}
+{{- $github_email := "nathakorn.tonch@gmail.com" -}}
 {{- $username := default "nijicha" -}}
 {{- $hostname := default "nijicha" (env "CM_hostname") -}}
 {{- $computer_name := default "nijicha MacBook Pro" (env "CM_computer_name") -}}
@@ -9,6 +10,7 @@
 {{-   $name = promptString "Full Name" $name -}}
 {{-   $email = promptString "Email" $email -}}
 {{-   $github_user = promptString "GitHub Username" $github_user -}}
+{{-   $github_email = promptString "GitHub Email" $github_email -}}
 {{-   $username := promptString "username" $username -}}
 {{-   $hostname = promptString "Hostname" $hostname -}}
 {{-   $computer_name = promptString "Computer Name" $computer_name -}}
@@ -18,6 +20,7 @@ data:
   name: {{ $name | quote }}
   email: {{ $email | quote }}
   github_user: {{ $github_user | quote }}
+  github_email: {{ $github_email | quote }}
   username: {{ $username | quote }}
   hostname: {{ $hostname | quote }}
   computer_name: {{ $computer_name | quote }}
