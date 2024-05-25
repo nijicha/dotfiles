@@ -24,4 +24,4 @@ else
 fi
 
 # exec: replace current process with chezmoi init
-exec "$chezmoi" init --apply nijicha
+exec "$chezmoi" init --apply
