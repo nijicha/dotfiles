@@ -85,6 +85,9 @@
     "gapSize" : {
       "float" : 0
     },
+    "hapticFeedbackOnSnap" : {
+      "int" : 1
+    },
     "hideMenubarIcon" : {
       "bool" : true
     },
@@ -191,10 +194,13 @@
       "int" : 1
     },
     "SUEnableAutomaticChecks" : {
-      "bool" : false
+      "bool" : true
     },
     "systemWideMouseDown" : {
       "int" : 0
+    },
+    "systemWideMouseDownApps" : {
+
     },
     "todo" : {
       "int" : 0
@@ -315,5 +321,5 @@
       "modifierFlags" : 786432
     }
   },
-  "version" : "81"
+  "version" : "85"
 }
