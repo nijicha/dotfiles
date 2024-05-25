@@ -1,6 +1,7 @@
 {{- $name := "Nathakorn Chaninthanadecha" -}}
 {{- $email := "nathakorn.tonch@gmail.com" -}}
 {{- $github_user := "nijicha" -}}
+{{- $username := default "nijicha" -}}
 {{- $hostname := default "nijicha" (env "CM_hostname") -}}
 {{- $computer_name := default "nijicha MacBook Pro" (env "CM_computer_name") -}}
 
@@ -8,6 +9,7 @@
 {{-   $name = promptString "Full Name" $name -}}
 {{-   $email = promptString "Email" $email -}}
 {{-   $github_user = promptString "GitHub Username" $github_user -}}
+{{-   $username := promptString "username" $username -}}
 {{-   $hostname = promptString "Hostname" $hostname -}}
 {{-   $computer_name = promptString "Computer Name" $computer_name -}}
 {{- end }}

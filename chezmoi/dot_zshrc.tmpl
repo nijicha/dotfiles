@@ -78,8 +78,8 @@ export PATH="/opt/homebrew/opt/curl/bin:$PATH"
 export PATH="$PATH:$HOME/.puro/bin" # Added by Puro
 export PATH="$PATH:$HOME/.puro/shared/pub_cache/bin" # Added by Puro
 export PATH="$PATH:$HOME/.puro/envs/default/flutter/bin" # Added by Puro
-export PURO_ROOT="/Users/nijicha/.puro" # Added by Puro
-export PUB_CACHE="/Users/nijicha/.puro/shared/pub_cache" # Added by Puro
+export PURO_ROOT="/Users/{{ .username }}/.puro" # Added by Puro
+export PUB_CACHE="/Users/{{ .username }}/.puro/shared/pub_cache" # Added by Puro
 
 # For bundled java from Android Studio
 # export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jbr/Contents/Home
@@ -88,7 +88,7 @@ export PUB_CACHE="/Users/nijicha/.puro/shared/pub_cache" # Added by Puro
 # export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
 
 # Set Jetbrains Toolbox App PATH
-export PATH="$PATH:/Users/nijicha/Library/Application Support/JetBrains/Toolbox/scripts"
+export PATH="$PATH:/Users/{{ .username }}/Library/Application Support/JetBrains/Toolbox/scripts"
 
 # Set .local PATH
 # export PATH="$PATH:${HOME}/.local/bin"
@@ -136,7 +136,7 @@ z4h source -- ${HOMEBREW_PREFIX:+$HOMEBREW_PREFIX/opt/asdf/libexec/asdf.sh}
 ## [Completion]
 ### Dart
 if [[ -f ${HOME}/.dart-cli-completion/zsh-config.zsh ]]; then
-  z4h source  /Users/nijicha/.dart-cli-completion/zsh-config.zsh
+  z4h source  /Users/{{ .username }}/.dart-cli-completion/zsh-config.zsh
 fi
 
 # google-cloud-sdk
