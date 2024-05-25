@@ -5,8 +5,12 @@ dotfiles
 
 ## Usage
 ```shell
-ASK=1 sh -c "$(curl -fsSL https://raw.githubusercontent.com/nijicha/dotfiles/master/bin/remote_install.sh) -v"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/nijicha/dotfiles/master/bin/remote_install.sh) -v"
 ```
+## Manual
+- [ ] Enable 1Password SSH Agent
+- [ ] Install Jetbrains IDE from Toolbox
+- [ ] Run brew services `formula` as needed (Like redis)
 
 ## TODO
 - [ ] Add Brewfile required by `brew bundle`

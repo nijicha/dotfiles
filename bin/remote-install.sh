@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Install remotely from single shell command
-# Usage : sh -c "$(curl -fsSL https://raw.githubusercontent.com/nijicha/dotfiles/chezmoi/remote_install.sh)"
+# Usage : sh -c "$(curl -fsSL https://raw.githubusercontent.com/nijicha/dotfiles/bin/remote_install.sh)"
 
 echo "Installing Xcode Command Line Tools"
 xcode-select --install
