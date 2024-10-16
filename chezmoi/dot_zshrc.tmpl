@@ -67,6 +67,9 @@ z4h init || return
 
 # Configure PATH
 
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/mye/.zsh/completions:"* ]]; then export FPATH="/Users/mye/.zsh/completions:$FPATH"; fi
+
 # Set ANDROID_HOME PATH
 ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
@@ -125,7 +128,7 @@ export CM_computer_name="{{ .computer_name }}"
 export CM_hostname="{{ .hostname }}"
 
 # export DOCKER_DEFAULT_PLATFORM=linux/amd64
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+# export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
 # Source additional local files if they exist.
 z4h source ~/.env.zsh
@@ -140,8 +143,11 @@ if [[ -f ${HOME}/.dart-cli-completion/zsh-config.zsh ]]; then
 fi
 
 # google-cloud-sdk
-z4h source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
-z4h source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+# z4h source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+# z4h source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+
+# deno
+z4h source "/Users/mye/.deno/env"
 
 # Use additional Git repositories pulled in with `z4h install`.
 #
@@ -161,6 +167,9 @@ z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
 
 # Autoload functions.
 autoload -Uz zmv
+autoload -Uz compinit
+
+compinit
 
 # Define functions and completions.
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
