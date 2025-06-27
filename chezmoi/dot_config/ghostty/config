@@ -1,0 +1,4 @@
+command = /opt/homebrew/opt/fish/bin/fish
+theme = rose-pine
+font-family = Fantasque Sans Mono Regular
+font-size = 16
