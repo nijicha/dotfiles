@@ -2,3 +2,43 @@
 
 echo "Installing Xcode Command Line Tools"
 xcode-select --install
+
+# Install Homebrew if not already installed
+if ! command -v brew &> /dev/null; then
+    echo "Homebrew not found. Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    echo "Homebrew is already installed."
+fi
+
+# Install dependencies using Homebrew
+echo "Installing dependencies with Homebrew..."
+
+# Path to the brew formula file
+formula_file="chezmoi/dot_application-config/homebrew/brew-formula.txt"
+
+# Check if the formula file exists
+if [[ ! -f "$formula_file" ]]; then
+    echo "Error: $formula_file not found!"
+    exit 1
+fi
+
+# Read packages from file and install them
+while IFS= read -r package || [[ -n "$package" ]]; do
+    # Skip empty lines and lines starting with #
+    if [[ -z "$package" || "$package" =~ ^[[:space:]]*# ]]; then
+        continue
+    fi
+
+    # Extract the command name for checking (handle taps like vectordotdev/brew/vector)
+    command_name="${package##*/}"  # Get everything after the last /
+
+    if ! command -v "$command_name" &> /dev/null; then
+        echo "$package not found. Installing $package..."
+        brew install "$package"
+    else
+        echo "$package is already installed."
+    fi
+done < "$formula_file"
+
+echo "Dependencies installed successfully."
