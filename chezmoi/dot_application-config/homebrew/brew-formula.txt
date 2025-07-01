@@ -5,6 +5,7 @@ curl
 doctl
 eza
 fish
+fzf
 ghq
 git
 git-delta
@@ -13,7 +14,9 @@ libyaml
 mas
 mise
 redis
+spark
 starship
 vectordotdev/brew/vector
 vips
+watchman
 wget

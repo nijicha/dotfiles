@@ -7,14 +7,17 @@ cleanshot
 discord
 docker
 docker-desktop
+expo-orbit
 figma
 folx
-font-fantasque-sans-mono
+font-caskaydia-cove-nerd-font
 fontforge-app
 ghostty
+google-cloud-sdk
 iina
 insta360-studio
 istat-menus
+iterm2
 jetbrains-toolbox
 logi-options+
 lunar
@@ -28,3 +31,4 @@ session-manager-plugin
 slack
 spotify
 visual-studio-code
+zulu@17
