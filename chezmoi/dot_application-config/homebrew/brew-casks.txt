@@ -2,8 +2,8 @@
 arc
 bartender
 boom-3d
-clickup
 cleanshot
+clickup
 discord
 docker
 docker-desktop
@@ -26,8 +26,9 @@ notion-calendar
 numi
 philips-hue-sync
 raycast
-rectangle
 readdle-spark
+rectangle
+responsively
 session-manager-plugin
 slack
 spotify
