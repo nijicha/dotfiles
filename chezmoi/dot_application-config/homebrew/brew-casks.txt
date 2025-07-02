@@ -27,6 +27,7 @@ numi
 philips-hue-sync
 raycast
 rectangle
+readdle-spark
 session-manager-plugin
 slack
 spotify
