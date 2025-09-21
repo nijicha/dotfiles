@@ -1,27 +1,20 @@
 {{- $name := "Nathakorn C" -}}
 {{- $email := "nathakorn.tonch@gmail.com" -}}
 {{- $github_user := "nijicha" -}}
-{{- $github_email := "nathakorn.tonch@gmail.com" -}}
-{{- $username := default "nijicha" -}}
-{{- $hostname := default "nijicha" -}}
-{{- $computer_name := default "nijicha MacBook Pro" -}}
+{{- $signing_key := default "PLEASE_INSERT_YOUR_SIGNING_KEY" -}}
 
 {{- if (env "ASK") }}
 {{-   $name = promptString "Full Name" $name -}}
 {{-   $email = promptString "Email" $email -}}
 {{-   $github_user = promptString "GitHub Username" $github_user -}}
-{{-   $github_email = promptString "GitHub Email" $github_email -}}
-{{-   $username := promptString "username" $username -}}
-{{-   $hostname = promptString "Hostname" $hostname -}}
+{{-   $signing_key = promptString "Hostname" $signing_key -}}
 {{- end }}
 
 data:
   name: {{ $name | quote }}
   email: {{ $email | quote }}
   github_user: {{ $github_user | quote }}
-  github_email: {{ $github_email | quote }}
-  username: {{ $username | quote }}
-  hostname: {{ $hostname | quote }}
+  signing_key: {{ $signing_key | quote }}
 
 edit:
   command: code
