@@ -254,6 +254,8 @@
 				<string>network-launcher</string>
 			</dict>
 		</array>
+		<key>Network.Menubar.Mode.Value.ShowArrows</key>
+		<false/>
 		<key>Notifications.Enabled</key>
 		<integer>0</integer>
 		<key>Notifications.Items</key>
