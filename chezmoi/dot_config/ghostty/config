@@ -1,0 +1,13 @@
+command = /opt/homebrew/opt/fish/bin/fish
+theme = dark:CutiePro,light:GitHub-Light-Default
+font-family = CaskaydiaCove Nerd Font
+font-family-bold = CaskaydiaCove Nerd Font
+font-family-italic = CaskaydiaCove Nerd Font
+font-family-bold-italic = CaskaydiaCove Nerd Font
+font-size = 14
+font-feature = calt,clig,dlig,liga,ss01,ss02,ss03,ss04,ss05,ss06,ss07,ss08,ss09,zero
+background-blur = true
+background-blur-radius = 24
+background-opacity = 0.95
+keybind = ctrl+d=new_split:right
+keybind = ctrl+shift+d=new_split:down

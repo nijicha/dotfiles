@@ -1,0 +1,48 @@
+[color]
+    ui = true
+[user]
+    name = {{ .name }}
+    email = {{ .github_email }}
+    signingKey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO30Zb3UZKI2zBsGTu7Fzw7StGg3QdYN9EP8sHEGd4p4
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+[commit]
+  gpgSign = true
+[core]
+    autocrlf = input
+    excludesFile = ${HOME}/.gitignore_global
+    editor = vim
+    pager = delta
+	preloadIndex = true
+	abbrev = 12
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+    light = true
+    line-numbers = true
+    side-by-side = true
+[merge]
+    conflictStyle = diff3
+[diff]
+    colorMoved = default
+	algorithm = histogram
+[init]
+    defaultBranch = main
+[ghq]
+    vcs = git
+    root = ~/Workspace/ghq
+[alias]
+    graph = log --graph --oneline --abbrev-commit --decorate --all
+    hist = log --graph --abbrev-commit --decorate --all
+	tree = log --graph --pretty=format:\"%C(yellow)%h%C(cyan)%d%C(reset) %s %C(white)- %an, %ar%C(reset)\"
+	st = status
+	co = checkout
+	br = branch
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	visual = !gitk
+[log]
+	date = relative
