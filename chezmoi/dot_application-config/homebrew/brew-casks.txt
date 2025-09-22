@@ -3,15 +3,15 @@ adobe-creative-cloud
 arc
 clickup
 discord
-docker
+docker-desktop
 figma
 font-caskaydia-cove-nerd-font
 fontforge-app
-iina
+google-drive
 insta360-studio
-istat-menus
 iterm2
 jetbrains-toolbox
+logi-options+
 lunar
 messenger
 notion
@@ -24,5 +24,3 @@ session-manager-plugin
 slack
 spotify
 visual-studio-code
-whatsapp
-zulu@17
