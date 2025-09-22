@@ -1,12 +1,14 @@
 #!/usr/bin/env fish
 
 set font_names \
+    "LINESeed*" \
+    "Chonburi*" \
     "CooperBlack*" \
+    "LEMONMILK*" \
+    "Notedry*" \
     "'High Empathy'*" \
-    "LINESeed*"
-
-# Create logs directory if not exists
-mkdir -p ./logs
+    "'Playful Boxes'*" \
+    "'Super Kindly'*"
 
 echo "Starting backup process..."
 
@@ -24,6 +26,7 @@ mas list > ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew/mas-li
 
 # Backup fonts
 echo "Backing up fonts..."
+echo
 
 set managed_fonts
 set added_fonts
@@ -46,10 +49,14 @@ for font_file in ~/Library/Fonts/*
 
         # If matched, check if already in chezmoi before adding
         if test $font_matched = true
-            # Check if font already exists in chezmoi
-            if chezmoi managed $font_file >/dev/null 2>&1
+            # Get the chezmoi source path for this font
+            set chezmoi_source_path (chezmoi source-path $font_file 2>/dev/null)
+
+            if test -f "$chezmoi_source_path"
+                # Font file exists in chezmoi source directory
                 set managed_fonts $managed_fonts $font_basename
             else
+                # Font is not managed by chezmoi yet
                 chezmoi add $font_file
                 set added_fonts $added_fonts $font_basename
             end
@@ -79,15 +86,38 @@ if test (count $managed_fonts) -gt 0
             # Brown bold for wildcard pattern
             echo -e "\033[1;33m$clean_pattern*\033[0m"
             # Green for font basenames
-            echo -e "\033[32m"(string join ", " $pattern_fonts)"\033[0m"
+            echo -e "\033[34m"(string join ", " $pattern_fonts)"\033[0m"
             echo
         end
     end
 end
 
-# Print added fonts in one line if any exist
+# Print added fonts grouped by pattern if any exist
 if test (count $added_fonts) -gt 0
-    echo "Added fonts: "(string join ", " $added_fonts)
+    echo "Added fonts:"
+
+    # Group fonts by pattern
+    for font_pattern in $font_names
+        set clean_pattern (string replace -a "'" "" $font_pattern)
+        set clean_pattern (string replace -a "*" "" $clean_pattern)
+        set pattern_fonts
+
+        # Find fonts that match this pattern
+        for added_font in $added_fonts
+            if string match -q "*$clean_pattern*" $added_font
+                set pattern_fonts $pattern_fonts $added_font
+            end
+        end
+
+        # Print pattern group if fonts found
+        if test (count $pattern_fonts) -gt 0
+            # Brown bold for wildcard pattern
+            echo -e "\033[1;33m$clean_pattern*\033[0m"
+            # Green for font basenames
+            echo -e "\033[32m"(string join ", " $pattern_fonts)"\033[0m"
+            echo
+        end
+    end
 end
 
 # Check if any fonts were found and log missing patterns
@@ -106,7 +136,7 @@ for font_pattern in $font_names
     end
 
     if test $found = false
-        echo "No fonts found matching pattern: $font_pattern" >> ./logs/FONT_NOT_FOUND.txt
+        echo -e "No fonts found matching pattern: \033[31m$font_pattern\033[0m"
     end
 end
 
