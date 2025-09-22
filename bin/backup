@@ -1,0 +1,113 @@
+#!/usr/bin/env fish
+
+set font_names \
+    "CooperBlack*" \
+    "'High Empathy'*" \
+    "LINESeed*"
+
+# Create logs directory if not exists
+mkdir -p ./logs
+
+echo "Starting backup process..."
+
+# Backup config files
+echo "Backing up Ghostty, mise & starship configs"
+chezmoi add ~/.config/ghostty/
+chezmoi add ~/.config/mise/
+chezmoi add ~/.config/starship.toml
+
+# Backup Homebrew
+echo "Backing up Hombrew (formula, casks, mas)"
+brew leaves > ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew/brew-formula.txt
+brew list --cask > ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew/brew-casks.txt
+mas list > ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew/mas-list.txt
+
+# Backup fonts
+echo "Backing up fonts..."
+
+set managed_fonts
+set added_fonts
+
+# Loop through all font files in ~/Library/Fonts
+for font_file in ~/Library/Fonts/*
+    if test -f $font_file
+        set font_basename (basename $font_file)
+        set font_matched false
+
+        # Check if this font matches any of our patterns
+        for font_pattern in $font_names
+            # Remove quotes and add wildcard matching
+            set clean_pattern (string replace -a "'" "" $font_pattern)
+            if string match -q "*$clean_pattern*" $font_basename
+                set font_matched true
+                break
+            end
+        end
+
+        # If matched, check if already in chezmoi before adding
+        if test $font_matched = true
+            # Check if font already exists in chezmoi
+            if chezmoi managed $font_file >/dev/null 2>&1
+                set managed_fonts $managed_fonts $font_basename
+            else
+                chezmoi add $font_file
+                set added_fonts $added_fonts $font_basename
+            end
+        end
+    end
+end
+
+# Print managed fonts grouped by pattern if any exist
+if test (count $managed_fonts) -gt 0
+    echo "Fonts already managed by chezmoi:"
+
+    # Group fonts by pattern
+    for font_pattern in $font_names
+        set clean_pattern (string replace -a "'" "" $font_pattern)
+        set clean_pattern (string replace -a "*" "" $clean_pattern)
+        set pattern_fonts
+
+        # Find fonts that match this pattern
+        for managed_font in $managed_fonts
+            if string match -q "*$clean_pattern*" $managed_font
+                set pattern_fonts $pattern_fonts $managed_font
+            end
+        end
+
+        # Print pattern group if fonts found
+        if test (count $pattern_fonts) -gt 0
+            # Brown bold for wildcard pattern
+            echo -e "\033[1;33m$clean_pattern*\033[0m"
+            # Green for font basenames
+            echo -e "\033[32m"(string join ", " $pattern_fonts)"\033[0m"
+            echo
+        end
+    end
+end
+
+# Print added fonts in one line if any exist
+if test (count $added_fonts) -gt 0
+    echo "Added fonts: "(string join ", " $added_fonts)
+end
+
+# Check if any fonts were found and log missing patterns
+for font_pattern in $font_names
+    set clean_pattern (string replace -a "'" "" $font_pattern)
+    set found false
+
+    for font_file in ~/Library/Fonts/*
+        if test -f $font_file
+            set font_basename (basename $font_file)
+            if string match -q "*$clean_pattern*" $font_basename
+                set found true
+                break
+            end
+        end
+    end
+
+    if test $found = false
+        echo "No fonts found matching pattern: $font_pattern" >> ./logs/FONT_NOT_FOUND.txt
+    end
+end
+
+echo "Backup completed!"

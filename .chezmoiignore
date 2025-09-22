@@ -3,3 +3,13 @@
 ._*
 .Spotlight-V100
 .Trashes
+
+# Fonts
+# CaskaydiaCoveNerdFont*.*
+
+# .Config
+~/.config/
+!~/.config/fish/
+~/.config/fish/config.fish.tmpl
+!~/.config/ghostty/
+!~/.config/mise/
