@@ -1,4 +1,4 @@
-1569813296  1Password for Safari     (8.11.9)
+1569813296  1Password for Safari     (8.11.10)
 1500855883  CapCut                   (7.1.0)
 1438243180  Dark Reader for Safari   (2.1.2)
 1039633667  Irvue                    (2025.3)
@@ -7,4 +7,4 @@
 504284434   Multi Monitor Wallpaper  (4.3.4)
 1494023538  Plash                    (2.16.0)
 1496833156  Swift Playground         (4.6.4)
-497799835   Xcode                    (26.0)
+497799835   Xcode                    (26.0.1)

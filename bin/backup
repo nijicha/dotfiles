@@ -2,20 +2,19 @@
 
 # Configuration
 set font_names \
-    "LINESeed*" \
-    "Chonburi*" \
-    "CooperBlack*" \
-    "LEMONMILK*" \
-    "Notedry*" \
-    "'High Empathy'*" \
-    "'Playful Boxes'*" \
-    "'Super Kindly'*"
+    "LINESeed" \
+    "Chonburi" \
+    "CooperBlack" \
+    "LEMONMILK" \
+    "Notedry" \
+    "'High Empathy'" \
+    "'Playful Boxes'" \
+    "'Super Kindly'"
 
 # Helper Functions
 function clean_font_pattern
     set pattern $argv[1]
     set pattern (string replace -a "'" "" $pattern)
-    set pattern (string replace -a "*" "" $pattern)
     echo $pattern
 end
 
