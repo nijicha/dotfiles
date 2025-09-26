@@ -1,6 +1,7 @@
 1569813296  1Password for Safari     (8.11.10)
 1500855883  CapCut                   (7.1.0)
 1438243180  Dark Reader for Safari   (2.1.2)
+682658836   GarageBand               (10.4.12)
 1039633667  Irvue                    (2025.3)
 409183694   Keynote                  (14.4)
 539883307   LINE                     (9.12.1)
