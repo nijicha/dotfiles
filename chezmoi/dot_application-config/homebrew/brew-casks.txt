@@ -29,6 +29,7 @@ lunar
 messenger
 notion
 notion-calendar
+onedrive
 philips-hue-sync
 raycast
 rectangle

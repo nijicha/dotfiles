@@ -2,6 +2,7 @@
 bun = "latest"
 deno = "latest"
 node = "lts"
+pnpm = "latest"
 ruby = "latest"
 rust = "latest"
 
