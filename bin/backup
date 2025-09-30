@@ -82,6 +82,11 @@ function backup_configs
     chezmoi add ~/.config/starship.toml
 end
 
+function backup_applications_config
+    echo "Backing up application configs"
+    chezmoi add ~/.application-config/
+end
+
 function backup_homebrew
     echo "Backing up Homebrew (formula, casks, mas)"
     set homebrew_dir ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew
@@ -150,6 +155,7 @@ function main
     echo "Starting backup process..."
     
     backup_configs
+    backup_applications_config
     backup_homebrew
     process_fonts
     
