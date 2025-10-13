@@ -1,5 +1,4 @@
 1password
-adobe-creative-cloud
 arc
 clickup
 discord
@@ -20,6 +19,7 @@ font-noto-sans-thai
 font-noto-sans-thai-looped
 font-noto-serif-thai
 fontforge-app
+gcloud-cli
 google-drive
 insta360-studio
 iterm2

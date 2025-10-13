@@ -13,7 +13,6 @@ libpq
 libyaml
 mas
 mise
-ncurses
 redis
 spark
 starship
