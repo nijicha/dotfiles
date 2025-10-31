@@ -1,4 +1,5 @@
 1password
+affinity
 arc
 clickup
 discord
@@ -29,6 +30,7 @@ lunar
 messenger
 notion
 notion-calendar
+obs
 onedrive
 philips-hue-sync
 raycast
