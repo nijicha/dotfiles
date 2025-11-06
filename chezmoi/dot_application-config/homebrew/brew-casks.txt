@@ -29,7 +29,6 @@ jetbrains-toolbox
 logi-options+
 lunar
 messenger
-notion
 notion-calendar
 obs
 onedrive

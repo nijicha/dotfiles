@@ -13,7 +13,6 @@ libpq
 libyaml
 mas
 mise
-python@3.12
 redis
 spark
 starship
