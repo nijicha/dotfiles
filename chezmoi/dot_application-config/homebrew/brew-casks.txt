@@ -22,6 +22,7 @@ font-noto-sans-thai-looped
 font-noto-serif-thai
 fontforge-app
 gcloud-cli
+google-chrome
 google-drive
 insta360-studio
 iterm2
