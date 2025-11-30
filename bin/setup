@@ -39,7 +39,7 @@ spinner() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+    while [ "$(ps a | awk '{print $1}' | grep -F "$pid")" ]; do
         local temp=${spinstr#?}
         printf " [%c] " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
@@ -56,12 +56,14 @@ is_empty_or_comment() {
 
 install_with_spinner() {
     local name="$1"
-    local install_cmd="$2"
+    shift
+    local install_cmd=("$@")
 
     echo -n "Installing $name..."
-    eval "$install_cmd" > /dev/null 2>&1 &
-    spinner $!
-    wait $!
+    "${install_cmd[@]}" > /dev/null 2>&1 &
+    local pid=$!
+    spinner "$pid"
+    wait "$pid"
 
     if [[ $? -eq 0 ]]; then
         echo -e " ${GREEN}✅${NC}"
@@ -95,8 +97,20 @@ check_and_install_mas() {
 process_package_file() {
     local file_path="$1"
     local package_type="$2"
-    local check_cmd_template="$3"
-    local install_cmd_template="$4"
+    shift 2
+    local check_cmd=("$1" "$2" "$3" "$4" "$5")
+    shift 5
+    local install_cmd=("$@")
+
+    # Remove empty elements from arrays
+    local check_cmd_clean=()
+    for elem in "${check_cmd[@]}"; do
+        [[ -n "$elem" ]] && check_cmd_clean+=("$elem")
+    done
+    local install_cmd_clean=()
+    for elem in "${install_cmd[@]}"; do
+        [[ -n "$elem" ]] && install_cmd_clean+=("$elem")
+    done
 
     if [[ ! -f "$file_path" ]]; then
         if [[ "$package_type" == "formula" ]]; then
@@ -116,21 +130,20 @@ process_package_file() {
     while IFS= read -r line || [[ -n "$line" ]]; do
         is_empty_or_comment "$line" && continue
 
-        local item_id item_name check_cmd
+        local item_id item_name
 
         if [[ "$package_type" == "mas" ]]; then
             item_id=$(echo "$line" | awk '{print $1}')
             item_name=$(echo "$line" | awk '{$1=""; print $0}' | sed 's/^ *//')
-            check_cmd=$(printf "$check_cmd_template" "$item_id")
         else
             item_id="$line"
             item_name="$line"
-            check_cmd=$(printf "$check_cmd_template" "$item_id")
         fi
 
         all_items+=("$item_id")
 
-        if eval "$check_cmd" &> /dev/null; then
+        # Execute check command with item_id as argument
+        if "${check_cmd_clean[@]}" "$item_id" &> /dev/null; then
             printf "${GREEN}✅ ${NC}%s\n" "$item_name"
         else
             printf "${RED}◼️  ${NC}%s\n" "$item_name"
@@ -148,8 +161,7 @@ process_package_file() {
     log_warning "Installing ${package_type}s: ${missing_items[*]}"
 
     for item_id in "${missing_items[@]}"; do
-        local install_cmd item_name
-        install_cmd=$(printf "$install_cmd_template" "$item_id")
+        local item_name
 
         if [[ "$package_type" == "mas" ]]; then
             item_name=$(grep "^$item_id" "$file_path" | awk '{$1=""; print $0}' | sed 's/^ *//')
@@ -157,27 +169,39 @@ process_package_file() {
             item_name="$item_id"
         fi
 
-        install_with_spinner "$item_name" "$install_cmd"
+        install_with_spinner "$item_name" "${install_cmd_clean[@]}" "$item_id"
     done
+}
+
+check_formula_installed() {
+    brew list "$1" &> /dev/null
+}
+
+check_cask_installed() {
+    brew list --cask "$1" &> /dev/null
+}
+
+check_mas_installed() {
+    mas list | grep -qF "^$1"
 }
 
 install_formulas() {
     process_package_file "$FORMULA_FILE" "formula" \
-        "brew list %s" \
-        "brew install %s"
+        check_formula_installed "" "" "" "" \
+        brew install
 }
 
 install_casks() {
     process_package_file "$CASKS_FILE" "cask" \
-        "brew list --cask %s" \
-        "brew install --cask %s"
+        check_cask_installed "" "" "" "" \
+        brew install --cask
 }
 
 install_mas_apps() {
     check_and_install_mas
     process_package_file "$MAS_FILE" "mas" \
-        "mas list | grep -q '^%s'" \
-        "mas install %s"
+        check_mas_installed "" "" "" "" \
+        mas install
 }
 
 open_manual_apps() {
@@ -224,10 +248,16 @@ open_manual_apps() {
 
     # Open each URL in a new browser tab
     for url in "${urls[@]}"; do
-        log_info "Opening: $url"
-        open "$url"
-        # Small delay to ensure tabs open in order
-        sleep 0.5
+        # Validate URL scheme - only allow http:// and https://
+        if [[ "$url" =~ ^https?:// ]]; then
+            log_info "Opening: $url"
+            open "$url"
+            # Small delay to ensure tabs open in order
+            sleep 0.5
+        else
+            log_warning "Skipping invalid or potentially dangerous URL: $url"
+            log_warning "Only http:// and https:// URLs are allowed"
+        fi
     done
 
     echo

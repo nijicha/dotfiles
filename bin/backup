@@ -91,9 +91,9 @@ function backup_homebrew
     echo "Backing up Homebrew (formula, casks, mas)"
     set homebrew_dir ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew
 
-    brew leaves > $homebrew_dir/brew-formula.txt
-    brew list --cask > $homebrew_dir/brew-casks.txt
-    mas list > $homebrew_dir/mas-list.txt
+    brew leaves > "$homebrew_dir/brew-formula.txt"
+    brew list --cask > "$homebrew_dir/brew-casks.txt"
+    mas list > "$homebrew_dir/mas-list.txt"
 end
 
 function normalize_app_name
@@ -106,13 +106,13 @@ function get_existing_app_data
     set app_name $argv[1]
     set manual_apps_file $argv[2]
 
-    if test -f $manual_apps_file
+    if test -f "$manual_apps_file"
         # Extract URL and notes for this app from existing file
         set in_app false
         set url ""
         set notes ""
 
-        for line in (cat $manual_apps_file)
+        for line in (cat "$manual_apps_file")
             if string match -q "*name: \"$app_name\"*" $line
                 set in_app true
             else if test $in_app = true
@@ -139,6 +139,15 @@ function backup_manual_apps
 
     set manual_apps_file ~/.local/share/chezmoi/chezmoi/dot_application-config/manual_apps.yml
     set temp_file (mktemp)
+
+    # Verify temp file was created successfully
+    if test -z "$temp_file"
+        echo "Error: Failed to create temporary file"
+        return 1
+    end
+
+    # Set restrictive permissions on temp file
+    chmod 600 "$temp_file"
 
     # Apps to ignore (bundled with other apps or system apps)
     set ignore_apps \
@@ -205,19 +214,19 @@ function backup_manual_apps
             set manual_count (math $manual_count + 1)
 
             # Get existing URL and notes if available
-            set existing_data (get_existing_app_data "$app_name" $manual_apps_file)
+            set existing_data (get_existing_app_data "$app_name" "$manual_apps_file")
             set url (string split "|" $existing_data)[1]
             set notes (string split "|" $existing_data)[2]
 
-            echo "  - name: \"$app_name\"" >> $temp_file
-            echo "    url: \"$url\"  # Fill in download URL" >> $temp_file
-            echo "    notes: \"$notes\"" >> $temp_file
-            echo "" >> $temp_file
+            echo "  - name: \"$app_name\"" >> "$temp_file"
+            echo "    url: \"$url\"  # Fill in download URL" >> "$temp_file"
+            echo "    notes: \"$notes\"" >> "$temp_file"
+            echo "" >> "$temp_file"
         end
     end
 
-    # Move temp file to final location
-    mv $temp_file $manual_apps_file
+    # Move temp file to final location (atomic operation)
+    mv -f "$temp_file" "$manual_apps_file"
 
     echo "Found $manual_count manually installed apps"
     echo "Saved to: $manual_apps_file"
@@ -233,18 +242,18 @@ function process_fonts
     
     # Process each font file
     for font_file in ~/Library/Fonts/*
-        if not test -f $font_file
+        if not test -f "$font_file"
             continue
         end
-        
-        set font_basename (basename $font_file)
-        set matching_pattern (find_matching_pattern $font_basename)
-        
+
+        set font_basename (basename "$font_file")
+        set matching_pattern (find_matching_pattern "$font_basename")
+
         if test $status -eq 0
-            if is_font_managed_by_chezmoi $font_file
+            if is_font_managed_by_chezmoi "$font_file"
                 set managed_fonts $managed_fonts $font_basename
             else
-                chezmoi add $font_file
+                chezmoi add "$font_file"
                 set added_fonts $added_fonts $font_basename
             end
         end
@@ -259,19 +268,19 @@ end
 
 function check_missing_patterns
     for font_pattern in $font_names
-        set clean_pattern (clean_font_pattern $font_pattern)
+        set clean_pattern (clean_font_pattern "$font_pattern")
         set found false
-        
+
         for font_file in ~/Library/Fonts/*
-            if test -f $font_file
-                set font_basename (basename $font_file)
-                if font_matches_pattern $font_basename $clean_pattern
+            if test -f "$font_file"
+                set font_basename (basename "$font_file")
+                if font_matches_pattern "$font_basename" "$clean_pattern"
                     set found true
                     break
                 end
             end
         end
-        
+
         if test $found = false
             echo -e "No fonts found matching pattern: \033[31m$font_pattern\033[0m"
         end
