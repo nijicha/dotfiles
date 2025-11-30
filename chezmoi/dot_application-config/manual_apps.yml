@@ -6,8 +6,8 @@ apps:
     url: "https://www.anycubic.com/fdmDownload"
     notes: "Slicer for 3D printers"
 
-  - name: "Adobe Creative Cloud"
-    url: "https://www.adobe.com/th_th/creativecloud/desktop-app.html"
+  - name: "BambuStudio"
+    url: "https://bambulab.com/en/download/studio"  # Fill in download URL
     notes: ""
 
   - name: "Postgres"
