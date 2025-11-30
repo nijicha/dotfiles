@@ -4,6 +4,7 @@ affinity
 antigravity
 arc
 bartender
+blender
 claude-code
 clickup
 discord
