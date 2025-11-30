@@ -7,7 +7,7 @@ apps:
     notes: "Slicer for 3D printers"
 
   - name: "BambuStudio"
-    url: "https://bambulab.com/en/download/studio"  # Fill in download URL
+    url: "https://bambulab.com/en/download/studio"
     notes: ""
 
   - name: "Postgres"

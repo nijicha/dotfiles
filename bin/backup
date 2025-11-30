@@ -219,7 +219,11 @@ function backup_manual_apps
             set notes (string split "|" $existing_data)[2]
 
             echo "  - name: \"$app_name\"" >> "$temp_file"
-            echo "    url: \"$url\"  # Fill in download URL" >> "$temp_file"
+            if test -n "$url"
+                echo "    url: \"$url\"" >> "$temp_file"
+            else
+                echo "    url: \"$url\"  # Fill in download URL" >> "$temp_file"
+            end
             echo "    notes: \"$notes\"" >> "$temp_file"
             echo "" >> "$temp_file"
         end

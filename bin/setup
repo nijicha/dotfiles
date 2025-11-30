@@ -94,23 +94,25 @@ check_and_install_mas() {
     fi
 }
 
+# Get all installed packages in one call (optimization)
+get_all_installed_formulas() {
+    brew list 2>/dev/null || true
+}
+
+get_all_installed_casks() {
+    brew list --cask 2>/dev/null || true
+}
+
+get_all_installed_mas() {
+    mas list 2>/dev/null || true
+}
+
 process_package_file() {
     local file_path="$1"
     local package_type="$2"
-    shift 2
-    local check_cmd=("$1" "$2" "$3" "$4" "$5")
-    shift 5
+    local installed_list="$3"
+    shift 3
     local install_cmd=("$@")
-
-    # Remove empty elements from arrays
-    local check_cmd_clean=()
-    for elem in "${check_cmd[@]}"; do
-        [[ -n "$elem" ]] && check_cmd_clean+=("$elem")
-    done
-    local install_cmd_clean=()
-    for elem in "${install_cmd[@]}"; do
-        [[ -n "$elem" ]] && install_cmd_clean+=("$elem")
-    done
 
     if [[ ! -f "$file_path" ]]; then
         if [[ "$package_type" == "formula" ]]; then
@@ -142,12 +144,23 @@ process_package_file() {
 
         all_items+=("$item_id")
 
-        # Execute check command with item_id as argument
-        if "${check_cmd_clean[@]}" "$item_id" &> /dev/null; then
-            printf "${GREEN}✅ ${NC}%s\n" "$item_name"
+        # Check if item is in the installed list
+        if [[ "$package_type" == "mas" ]]; then
+            # For mas apps, check by ID prefix
+            if echo "$installed_list" | grep -qF "$item_id"; then
+                printf "${GREEN}✅ ${NC}%s\n" "$item_name"
+            else
+                printf "${RED}◼️  ${NC}%s\n" "$item_name"
+                missing_items+=("$item_id")
+            fi
         else
-            printf "${RED}◼️  ${NC}%s\n" "$item_name"
-            missing_items+=("$item_id")
+            # For formulas and casks, check exact match
+            if echo "$installed_list" | grep -qFx "$item_id"; then
+                printf "${GREEN}✅ ${NC}%s\n" "$item_name"
+            else
+                printf "${RED}◼️  ${NC}%s\n" "$item_name"
+                missing_items+=("$item_id")
+            fi
         fi
     done < "$file_path"
 
@@ -169,38 +182,26 @@ process_package_file() {
             item_name="$item_id"
         fi
 
-        install_with_spinner "$item_name" "${install_cmd_clean[@]}" "$item_id"
+        install_with_spinner "$item_name" "${install_cmd[@]}" "$item_id"
     done
 }
 
-check_formula_installed() {
-    brew list "$1" &> /dev/null
-}
-
-check_cask_installed() {
-    brew list --cask "$1" &> /dev/null
-}
-
-check_mas_installed() {
-    mas list | grep -qF "^$1"
-}
-
 install_formulas() {
-    process_package_file "$FORMULA_FILE" "formula" \
-        check_formula_installed "" "" "" "" \
+    local installed_formulas=$(get_all_installed_formulas)
+    process_package_file "$FORMULA_FILE" "formula" "$installed_formulas" \
         brew install
 }
 
 install_casks() {
-    process_package_file "$CASKS_FILE" "cask" \
-        check_cask_installed "" "" "" "" \
+    local installed_casks=$(get_all_installed_casks)
+    process_package_file "$CASKS_FILE" "cask" "$installed_casks" \
         brew install --cask
 }
 
 install_mas_apps() {
     check_and_install_mas
-    process_package_file "$MAS_FILE" "mas" \
-        check_mas_installed "" "" "" "" \
+    local installed_mas=$(get_all_installed_mas)
+    process_package_file "$MAS_FILE" "mas" "$installed_mas" \
         mas install
 }
 
