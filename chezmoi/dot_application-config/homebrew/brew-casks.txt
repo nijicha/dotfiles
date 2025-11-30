@@ -3,6 +3,7 @@
 affinity
 antigravity
 arc
+bartender
 claude-code
 clickup
 discord

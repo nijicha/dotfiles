@@ -1,0 +1,23 @@
+# Manual Applications (not installed via Homebrew or Mac App Store)
+# Fill in the 'url' field for each app to enable automated opening in browser
+
+apps:
+  - name: "AnycubicSlicer"
+    url: "https://www.anycubic.com/fdmDownload"
+    notes: "Slicer for 3D printers"
+
+  - name: "Adobe Creative Cloud"
+    url: "https://www.adobe.com/th_th/creativecloud/desktop-app.html"
+    notes: ""
+
+  - name: "Postgres"
+    url: "https://postgresapp.com/"
+    notes: ""
+
+  - name: "Setapp"
+    url: "https://setapp.com"
+    notes: ""
+
+  - name: "Voicemod"
+    url: "https://www.voicemod.net/"
+    notes: ""

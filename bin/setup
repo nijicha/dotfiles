@@ -11,6 +11,7 @@ readonly HOMEBREW_DIR="chezmoi/dot_application-config/homebrew"
 readonly FORMULA_FILE="${HOMEBREW_DIR}/brew-formula.txt"
 readonly CASKS_FILE="${HOMEBREW_DIR}/brew-casks.txt"
 readonly MAS_FILE="${HOMEBREW_DIR}/mas-list.txt"
+readonly MANUAL_APPS_FILE="chezmoi/dot_application-config/manual_apps.yml"
 
 # Color codes
 readonly GREEN='\033[0;32m'
@@ -179,6 +180,61 @@ install_mas_apps() {
         "mas install %s"
 }
 
+open_manual_apps() {
+    if [[ ! -f "$MANUAL_APPS_FILE" ]]; then
+        log_warning "Manual apps file not found at $MANUAL_APPS_FILE, skipping."
+        return 0
+    fi
+
+    # Check if AUTO mode is enabled
+    if [[ "${AUTO:-false}" != "true" ]]; then
+        log_info "Manual apps detected. Set AUTO=true to open download URLs in browser."
+        return 0
+    fi
+
+    echo "Processing manual apps..."
+
+    local urls=()
+    local in_url=false
+
+    # Parse YAML file to extract URLs
+    while IFS= read -r line; do
+        # Skip comments and empty lines
+        if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "$line" ]]; then
+            continue
+        fi
+
+        # Check if this is a URL line
+        if [[ "$line" =~ ^[[:space:]]*url:[[:space:]]*\"(.+)\"[[:space:]]* ]]; then
+            local url="${BASH_REMATCH[1]}"
+            # Only add non-empty URLs
+            if [[ -n "$url" ]]; then
+                urls+=("$url")
+            fi
+        fi
+    done < "$MANUAL_APPS_FILE"
+
+    if [[ ${#urls[@]} -eq 0 ]]; then
+        log_warning "No download URLs found in manual apps file."
+        log_info "Please fill in the 'url' fields in $MANUAL_APPS_FILE"
+        return 0
+    fi
+
+    log_info "Opening ${#urls[@]} download URL(s) in browser..."
+
+    # Open each URL in a new browser tab
+    for url in "${urls[@]}"; do
+        log_info "Opening: $url"
+        open "$url"
+        # Small delay to ensure tabs open in order
+        sleep 0.5
+    done
+
+    echo
+    log_info "Manual app downloads opened in browser."
+    log_warning "Please install these apps manually and run the backup script again to update versions."
+}
+
 # =============================================================================
 # Main Installation Flow
 # =============================================================================
@@ -191,6 +247,7 @@ main() {
     install_formulas
     install_casks
     install_mas_apps
+    open_manual_apps
 
     log_info "Setup completed."
 }

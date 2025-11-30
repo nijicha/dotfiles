@@ -90,10 +90,138 @@ end
 function backup_homebrew
     echo "Backing up Homebrew (formula, casks, mas)"
     set homebrew_dir ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew
-    
+
     brew leaves > $homebrew_dir/brew-formula.txt
     brew list --cask > $homebrew_dir/brew-casks.txt
     mas list > $homebrew_dir/mas-list.txt
+end
+
+function normalize_app_name
+    set name $argv[1]
+    # Convert to lowercase, remove spaces and hyphens, remove common suffixes
+    echo $name | string lower | string replace -a ' ' '' | string replace -a '-' '' | string replace -r '(app|desktop)$' ''
+end
+
+function get_existing_app_data
+    set app_name $argv[1]
+    set manual_apps_file $argv[2]
+
+    if test -f $manual_apps_file
+        # Extract URL and notes for this app from existing file
+        set in_app false
+        set url ""
+        set notes ""
+
+        for line in (cat $manual_apps_file)
+            if string match -q "*name: \"$app_name\"*" $line
+                set in_app true
+            else if test $in_app = true
+                if string match -q "*url:*" $line
+                    set url (string replace -r '.*url: *"([^"]*)".*' '$1' $line)
+                else if string match -q "*notes:*" $line
+                    set notes (string replace -r '.*notes: *"([^"]*)".*' '$1' $line)
+                    echo "$url|$notes"
+                    return 0
+                else if string match -q "  - name:" $line
+                    # Started new app entry
+                    break
+                end
+            end
+        end
+    end
+
+    echo "|"
+    return 1
+end
+
+function backup_manual_apps
+    echo "Detecting manually installed apps..."
+
+    set manual_apps_file ~/.local/share/chezmoi/chezmoi/dot_application-config/manual_apps.yml
+    set temp_file (mktemp)
+
+    # Apps to ignore (bundled with other apps or system apps)
+    set ignore_apps \
+        "Google Docs" \
+        "Google Sheets" \
+        "Google Slides" \
+        "logioptionsplus"
+
+    # Get lists of managed apps
+    set cask_apps (brew list --cask 2>/dev/null)
+    set mas_apps (mas list 2>/dev/null | awk '{$1=""; print $0}' | sed 's/^ *//' | sed 's/ *(.*//' | sed 's/\.app$//')
+
+    # Start YAML file
+    echo "# Manual Applications (not installed via Homebrew or Mac App Store)" > $temp_file
+    echo "# Fill in the 'url' field for each app to enable automated opening in browser" >> $temp_file
+    echo "" >> $temp_file
+    echo "apps:" >> $temp_file
+
+    set manual_count 0
+
+    # Check each app in /Applications
+    for app_path in /Applications/*.app
+        if not test -d $app_path
+            continue
+        end
+
+        set app_name (basename $app_path .app)
+        set normalized_app (normalize_app_name $app_name)
+        set is_manual true
+
+        # Check if app is in ignore list
+        for ignore_app in $ignore_apps
+            if test "$app_name" = "$ignore_app"
+                set is_manual false
+                break
+            end
+        end
+
+        # Check if installed by Homebrew cask
+        if test $is_manual = true
+            for cask in $cask_apps
+                set normalized_cask (normalize_app_name $cask)
+                # Check both directions: if cask contains app or app contains cask
+                if string match -q "*$normalized_cask*" $normalized_app; or string match -q "*$normalized_app*" $normalized_cask
+                    set is_manual false
+                    break
+                end
+            end
+        end
+
+        # Check if installed by mas
+        if test $is_manual = true
+            for mas_app in $mas_apps
+                set normalized_mas (normalize_app_name $mas_app)
+                if string match -q "*$normalized_mas*" $normalized_app; or string match -q "*$normalized_app*" $normalized_mas
+                    set is_manual false
+                    break
+                end
+            end
+        end
+
+        # If manual, add to YAML
+        if test $is_manual = true
+            set manual_count (math $manual_count + 1)
+
+            # Get existing URL and notes if available
+            set existing_data (get_existing_app_data "$app_name" $manual_apps_file)
+            set url (string split "|" $existing_data)[1]
+            set notes (string split "|" $existing_data)[2]
+
+            echo "  - name: \"$app_name\"" >> $temp_file
+            echo "    url: \"$url\"  # Fill in download URL" >> $temp_file
+            echo "    notes: \"$notes\"" >> $temp_file
+            echo "" >> $temp_file
+        end
+    end
+
+    # Move temp file to final location
+    mv $temp_file $manual_apps_file
+
+    echo "Found $manual_count manually installed apps"
+    echo "Saved to: $manual_apps_file"
+    echo
 end
 
 function process_fonts
@@ -153,12 +281,13 @@ end
 # Main execution
 function main
     echo "Starting backup process..."
-    
+
     backup_configs
     backup_applications_config
     backup_homebrew
+    backup_manual_apps
     process_fonts
-    
+
     echo "Backup completed!"
 end
 
