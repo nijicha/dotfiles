@@ -37,6 +37,7 @@ obs
 onedrive
 philips-hue-sync
 raycast
+readdle-spark
 rectangle
 responsively
 session-manager-plugin
