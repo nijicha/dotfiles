@@ -167,6 +167,7 @@ function backup_manual_apps
     echo "apps:" >> $temp_file
 
     set manual_count 0
+    set first_app true
 
     # Check each app in /Applications
     for app_path in /Applications/*.app
@@ -213,6 +214,12 @@ function backup_manual_apps
         if test $is_manual = true
             set manual_count (math $manual_count + 1)
 
+            # Add blank line before entry (except for first entry)
+            if test $first_app = false
+                echo "" >> "$temp_file"
+            end
+            set first_app false
+
             # Get existing URL and notes if available
             set existing_data (get_existing_app_data "$app_name" "$manual_apps_file")
             set url (string split "|" $existing_data)[1]
@@ -225,7 +232,6 @@ function backup_manual_apps
                 echo "    url: \"$url\"  # Fill in download URL" >> "$temp_file"
             end
             echo "    notes: \"$notes\"" >> "$temp_file"
-            echo "" >> "$temp_file"
         end
     end
 
