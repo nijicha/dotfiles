@@ -9,3 +9,11 @@ env ASK=1 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.co
 ### Installation
 
 `./bin/setup`
+
+### Backup
+
+`./bin/backup`
+
+### Validate unused apps
+
+`./bin/unused`
