@@ -18,6 +18,10 @@ apps:
     url: "https://setapp.com"
     notes: ""
 
+  - name: "Steam"
+    url: ""  # Fill in download URL
+    notes: ""
+
   - name: "Voicemod"
     url: "https://www.voicemod.net/"
     notes: ""

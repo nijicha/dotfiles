@@ -5,7 +5,7 @@
 1039633667  Irvue                    (2025.4)
  409183694  Keynote                  (14.4)
  539883307  LINE                     (9.13.0)
- 462058435  Microsoft Excel          (16.103.2)
+ 462058435  Microsoft Excel          (16.103.3)
  504284434  Multi Monitor Wallpaper  (4.4.5)
  409203825  Numbers                  (14.4)
 1494023538  Plash                    (2.16.0)
