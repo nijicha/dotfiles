@@ -9,6 +9,7 @@ clickup
 discord
 docker-desktop
 figma
+font-cascadia-code-nf
 font-caskaydia-cove-nerd-font
 font-ibm-plex-sans-jp
 font-ibm-plex-sans-kr
