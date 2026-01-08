@@ -33,7 +33,6 @@ iterm2
 jetbrains-toolbox
 logi-options+
 lunar
-messenger
 notion-calendar
 obs
 onedrive

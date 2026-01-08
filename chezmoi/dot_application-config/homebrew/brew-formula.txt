@@ -13,6 +13,7 @@ libpq
 libyaml
 mas
 mise
+opencode
 redis
 spark
 starship
