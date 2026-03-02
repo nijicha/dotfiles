@@ -5,6 +5,7 @@ arc
 blender
 claude
 claude-code
+claudebar
 clickup
 discord
 docker-desktop
