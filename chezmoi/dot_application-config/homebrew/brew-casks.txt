@@ -1,9 +1,9 @@
 1password
 1password-cli
 affinity
-antigravity
 arc
 blender
+claude
 claude-code
 clickup
 discord

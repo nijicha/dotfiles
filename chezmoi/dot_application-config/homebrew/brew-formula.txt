@@ -4,6 +4,7 @@ chezmoi
 curl
 doctl
 eza
+ffmpeg
 fish
 fzf
 ghq
