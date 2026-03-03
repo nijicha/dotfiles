@@ -1,8 +1,6 @@
 1password
 1password-cli
 affinity
-arc
-blender
 claude
 claude-code
 claudebar
@@ -27,7 +25,6 @@ font-noto-sans-thai-looped
 font-noto-serif-thai
 fontforge-app
 gcloud-cli
-google-chrome
 google-drive
 insta360-studio
 iterm2
