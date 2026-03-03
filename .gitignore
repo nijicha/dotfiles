@@ -6,8 +6,9 @@
 .idea/
 
 # Claude
+chezmoi/dot_claude/*
 !chezmoi/dot_claude/settings.json
-chezmoi/dot_claude/
+!chezmoi/dot_claude/statusline-command.sh
 
 chezmoi/dot_claude_personal
 chezmoi/dot_claude_evp

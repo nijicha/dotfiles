@@ -14,5 +14,9 @@
       "Bash(git push:*)"
     ],
     "defaultMode": "default"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
   }
 }
