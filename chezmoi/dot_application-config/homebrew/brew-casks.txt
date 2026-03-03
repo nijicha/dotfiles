@@ -3,7 +3,6 @@
 affinity
 claude
 claude-code
-claudebar
 clickup
 discord
 docker-desktop
@@ -43,3 +42,4 @@ session-manager-plugin
 slack
 spotify
 visual-studio-code
+zoom

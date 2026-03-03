@@ -1,6 +1,8 @@
 # Mac OS
 .DS_Store
 .DS_Store?
+dot_DS_Store
+dot_DS_Store?
 
 # Jetbrains
 .idea/

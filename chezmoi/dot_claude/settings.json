@@ -15,7 +15,7 @@
     ],
     "defaultMode": "plan"
   },
-  "model": "haiku",
+  "model": "opusplan",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
