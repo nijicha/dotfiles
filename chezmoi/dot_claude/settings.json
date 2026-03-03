@@ -13,8 +13,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "plan"
   },
+  "model": "haiku",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"

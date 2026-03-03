@@ -75,11 +75,44 @@ function display_font_group
     end
 end
 
+function validate_claude_settings
+    set settings_file ~/.claude/settings.json
+
+    if not test -f "$settings_file"
+        return 0  # File doesn't exist, nothing to validate
+    end
+
+    # Check if env field contains actual values (not empty object)
+    if grep -q '"env"[[:space:]]*:[[:space:]]*{[[:space:]]*"[^"]*"' "$settings_file"
+        echo "⚠️  WARNING: ~/.claude/settings.json contains sensitive data in 'env' field"
+        echo "   This should NOT be backed up to git."
+        echo "   Please clear the 'env' field before backing up, or add to .gitignore"
+        return 1
+    end
+
+    # Check for common credential patterns that shouldn't be there
+    if grep -qiE '(api[_-]?key|password|token|secret|credential)' "$settings_file"
+        echo "⚠️  WARNING: ~/.claude/settings.json may contain credentials"
+        echo "   Please review before backing up"
+        return 1
+    end
+
+    return 0
+end
+
 function backup_configs
-    echo "Backing up Ghostty, mise & starship configs"
+    echo "Backing up Ghostty, mise, starship & Claude settings"
     chezmoi add ~/.config/ghostty/
     chezmoi add ~/.config/mise/
     chezmoi add ~/.config/starship.toml
+
+    # Validate Claude settings before backing up
+    if validate_claude_settings
+        chezmoi add ~/.claude/settings.json
+    else
+        echo "Skipped ~/.claude/settings.json due to validation warnings"
+        return 1
+    end
 end
 
 function backup_applications_config
