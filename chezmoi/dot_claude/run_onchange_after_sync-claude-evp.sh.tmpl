@@ -1,0 +1,11 @@
+#!/bin/sh
+# Hash: {{ include "dot_claude/settings.json" | sha256sum }}
+# Hash: {{ include "dot_claude/statusline-command.sh" | sha256sum }}
+
+EVP_DIR="$HOME/.claude-evp"
+
+if [ -d "$EVP_DIR" ]; then
+  cp "$HOME/.claude/settings.json" "$EVP_DIR/settings.json"
+  cp "$HOME/.claude/statusline-command.sh" "$EVP_DIR/statusline-command.sh"
+  echo "✅ Synced settings to ~/.claude-evp/"
+fi
