@@ -4,9 +4,9 @@ chezmoi
 curl
 doctl
 eza
-ffmpeg
 fish
 fzf
+gh
 ghq
 git
 git-delta

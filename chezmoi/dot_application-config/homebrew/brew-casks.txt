@@ -40,6 +40,5 @@ rectangle
 responsively
 session-manager-plugin
 slack
-spotify
 visual-studio-code
 zoom

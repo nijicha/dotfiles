@@ -10,6 +10,10 @@ apps:
     url: "https://bambulab.com/en/download/studio"
     notes: ""
 
+  - name: "Cloudflare WARP"
+    url: ""  # Fill in download URL
+    notes: ""
+
   - name: "Postgres"
     url: "https://postgresapp.com/"
     notes: ""
