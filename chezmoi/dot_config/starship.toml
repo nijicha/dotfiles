@@ -19,9 +19,9 @@ $haskell\
 $java\
 $julia\
 $maven\
-$nodejs\
+$custom.node\
 $nim\
-$ruby\
+$custom.ruby\
 $rust\
 $scala\
 [](fg:#86BBD8 bg:#06969A)\
@@ -134,6 +134,14 @@ format = '[ $symbol ($version) ]($style)'
 symbol = ""
 style = "bg:#86BBD8"
 format = '[ $symbol ($version) ]($style)'
+disabled = true
+
+[custom.node]
+command = "mise current node 2>/dev/null || node --version 2>/dev/null | sed 's/^v//'"
+detect_files = ["mise.toml", ".mise.toml", "package.json", ".nvmrc", ".node-version", ".tool-versions"]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol (v$output) ]($style)'
 
 [nim]
 symbol = "󰆥 "
@@ -144,6 +152,14 @@ format = '[ $symbol ($version) ]($style)'
 symbol = " "
 style = "bg:#86BBD8"
 format = '[ $symbol ($version) ]($style)'
+disabled = true
+
+[custom.ruby]
+command = "mise current ruby 2>/dev/null || ruby --version 2>/dev/null | sed 's/^ruby //; s/ .*//' | sed 's/^p/v/'"
+detect_files = ["mise.toml", ".mise.toml", "Gemfile", ".ruby-version", ".tool-versions"]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($output) ]($style)'
 
 [rust]
 symbol = ""

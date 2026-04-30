@@ -15,7 +15,7 @@
     "ask": [],
     "defaultMode": "plan"
   },
-  "model": "opus",
+  "model": "haiku",
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
