@@ -9,10 +9,11 @@
       "Read(*.env)",
       "Bash(rm:*)",
       "Bash(curl:*)",
-      "Bash(git commit:*)",
       "Bash(git push:*)"
     ],
-    "ask": [],
+    "ask": [
+      "Bash(git commit:*)"
+    ],
     "defaultMode": "plan"
   },
   "model": "haiku",
