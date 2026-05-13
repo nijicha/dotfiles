@@ -19,17 +19,15 @@ $haskell\
 $java\
 $julia\
 $maven\
-$custom.node\
+${custom.node}\
 $nim\
-$custom.ruby\
+${custom.ruby}\
 $rust\
 $scala\
 [](fg:#86BBD8 bg:#06969A)\
 $docker_context\
-[](fg:#06969A bg:#33658A)\
-$time\
-[ ](fg:#33658A)\
-"""
+[](fg:#06969A)
+$time"""
 
 # Disable the blank line at the start of the prompt
 # add_newline = false
@@ -173,6 +171,11 @@ format = '[ $symbol ($version) ]($style)'
 
 [time]
 disabled = false
-time_format = "%R" # Hour:Minute Format
+time_format = "%I:%M %p" # Hour:Minute Format
 style = "bg:#33658A"
-format = '[ ♥ $time ]($style)'
+format = '[](fg:#33658A)[ $time ]($style)[](fg:#33658A) '
+
+[character]
+format = '$symbol'
+success_symbol = '[❯ ](bg:#33658A bold green)[](fg:#33658A)'
+error_symbol = '[❯ ](bg:#33658A bold red)[](fg:#33658A)'
