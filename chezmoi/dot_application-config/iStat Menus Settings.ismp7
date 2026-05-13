@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>build</key>
-	<string>2250</string>
+	<string>2262</string>
 	<key>preferences</key>
 	<dict>
 		<key>Battery.Menu.State</key>
@@ -193,6 +193,8 @@
 		<integer>1</integer>
 		<key>Menubar.Style</key>
 		<integer>1</integer>
+		<key>MenubarCurrentApperance</key>
+		<string>Dark</string>
 		<key>Migration.CombinedPowerItems</key>
 		<true/>
 		<key>Migration.Profiles</key>
@@ -254,8 +256,6 @@
 				<string>network-launcher</string>
 			</dict>
 		</array>
-		<key>Network.Menubar.Mode.Value.ShowArrows</key>
-		<false/>
 		<key>Notifications.Enabled</key>
 		<integer>0</integer>
 		<key>Notifications.Items</key>
@@ -314,6 +314,14 @@
 		<array>
 			<dict>
 				<key>source</key>
+				<integer>9</integer>
+				<key>subtype</key>
+				<integer>6</integer>
+				<key>type</key>
+				<integer>7</integer>
+			</dict>
+			<dict>
+				<key>source</key>
 				<integer>1</integer>
 				<key>subtype</key>
 				<integer>1</integer>
@@ -355,6 +363,69 @@
 		<integer>0</integer>
 		<key>Profiles.Settings.default.Sensors.Menubar.Enabled</key>
 		<integer>0</integer>
+		<key>Profiles.Settings.default.Time.Menubar.Clocks</key>
+		<array>
+			<dict>
+				<key>line1</key>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>format</key>
+							<string>d</string>
+							<key>format-type</key>
+							<string>day</string>
+							<key>type</key>
+							<string>token</string>
+						</dict>
+						<dict>
+							<key>type</key>
+							<string>string</string>
+							<key>value</key>
+							<string> </string>
+						</dict>
+						<dict>
+							<key>format</key>
+							<string>MMM</string>
+							<key>format-type</key>
+							<string>month</string>
+							<key>type</key>
+							<string>token</string>
+						</dict>
+					</array>
+				</dict>
+				<key>line2</key>
+				<dict>
+					<key>items</key>
+					<array>
+						<dict>
+							<key>format</key>
+							<string>h</string>
+							<key>format-type</key>
+							<string>hour</string>
+							<key>type</key>
+							<string>token</string>
+						</dict>
+						<dict>
+							<key>type</key>
+							<string>string</string>
+							<key>value</key>
+							<string>:</string>
+						</dict>
+						<dict>
+							<key>format</key>
+							<string>mm</string>
+							<key>format-type</key>
+							<string>minute</string>
+							<key>type</key>
+							<string>token</string>
+						</dict>
+					</array>
+				</dict>
+				<key>lines</key>
+				<string>2</string>
+			</dict>
+		</array>
 		<key>Profiles.Settings.default.Time.Menubar.Enabled</key>
 		<integer>0</integer>
 		<key>Sensors.Global.DetailLevel</key>
@@ -417,9 +488,9 @@
 			</dict>
 		</array>
 		<key>Status.Build.Last</key>
-		<real>2250</real>
+		<real>2262</real>
 		<key>Status.Version.Last</key>
-		<real>7.0999999046325684</real>
+		<real>7.1999998092651367</real>
 		<key>Updates.Attempts.2249</key>
 		<integer>1</integer>
 		<key>Updates.Attempts.2250</key>
@@ -461,6 +532,18 @@
 				<string>willyweather</string>
 				<key>name</key>
 				<string>🇦🇺 WillyWeather (BoM)</string>
+			</dict>
+			<dict>
+				<key>key</key>
+				<string>dwd</string>
+				<key>name</key>
+				<string>🇩🇪 DWD</string>
+			</dict>
+			<dict>
+				<key>key</key>
+				<string>meteofrance</string>
+				<key>name</key>
+				<string>🇫🇷 Meteo France</string>
 			</dict>
 		</array>
 	</dict>
