@@ -4,6 +4,7 @@ affinity
 claude
 claude-code
 clickup
+codex
 discord
 docker-desktop
 figma
@@ -24,6 +25,7 @@ font-noto-sans-thai-looped
 font-noto-serif-thai
 fontforge-app
 gcloud-cli
+google-chrome
 google-drive
 insta360-studio
 iterm2

@@ -11,6 +11,14 @@ apps:
     notes: ""
 
   - name: "Cloudflare WARP"
+    url: ""
+    notes: ""
+
+  - name: "CuaDriver"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "Orca"
     url: ""  # Fill in download URL
     notes: ""
 

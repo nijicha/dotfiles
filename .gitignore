@@ -11,4 +11,3 @@ dot_DS_Store?
 chezmoi/dot_claude/*
 !chezmoi/dot_claude/settings.json
 !chezmoi/dot_claude/statusline-command.sh
-!chezmoi/dot_claude/run_onchange_after_sync-claude-evp.sh.tmpl

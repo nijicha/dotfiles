@@ -4,6 +4,7 @@ chezmoi
 curl
 doctl
 eza
+ffmpeg
 fish
 fzf
 gh
@@ -16,6 +17,7 @@ mas
 mise
 opencode
 redis
+shared-mime-info
 spark
 starship
 vectordotdev/brew/vector
