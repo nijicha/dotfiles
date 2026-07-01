@@ -16,6 +16,90 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
@@ -29,82 +113,15 @@
     "figma@claude-plugins-official": true,
     "ruby-lsp@claude-plugins-official": true
   },
-  "theme": "auto",
+  "extraKnownMarketplaces": {
+    "ombulabs-ai": {
+      "source": {
+        "source": "github",
+        "repo": "ombulabs/claude-skills"
+      }
+    }
+  },
   "effortLevel": "xhigh",
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi"
-          }
-        ]
-      }
-    ]
-  }
+  "theme": "auto",
+  "tui": "fullscreen"
 }
