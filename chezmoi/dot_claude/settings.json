@@ -7,6 +7,8 @@
     ],
     "deny": [
       "Read(*.env)",
+      "Read(**/.env.*)",
+      "Read(**/application.yml)",
       "Bash(curl:*)"
     ],
     "ask": [
@@ -16,14 +18,14 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -34,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -45,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -57,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -69,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -81,7 +83,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -93,7 +95,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/mai/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/mai/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -111,7 +113,12 @@
     "playwright@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "figma@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true
+    "ruby-lsp@claude-plugins-official": true,
+    "rails-upgrade@ombulabs-ai": true,
+    "rails-load-defaults@ombulabs-ai": true,
+    "dual-boot@ombulabs-ai": true,
+    "upgrade-cleanup@ombulabs-ai": true,
+    "vercel@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ombulabs-ai": {
@@ -122,6 +129,7 @@
     }
   },
   "effortLevel": "xhigh",
-  "theme": "auto",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
+  "theme": "auto"
 }
