@@ -2,3 +2,6 @@
 # resolves tool versions from .mise.toml instead of Homebrew's global binaries.
 # mise activate (hook-env) only runs in interactive shells; shims cover the rest.
 export PATH="$HOME/.local/share/mise/shims:$PATH"
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"

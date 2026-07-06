@@ -2,8 +2,9 @@
 1password-cli
 affinity
 claude
-claude-code@latest
+claude-code
 clickup
+codex
 discord
 docker-desktop
 figma
@@ -24,6 +25,7 @@ font-noto-sans-thai-looped
 font-noto-serif-thai
 fontforge-app
 gcloud-cli
+google-chrome
 google-drive
 insta360-studio
 iterm2
@@ -40,5 +42,5 @@ rectangle
 responsively
 session-manager-plugin
 slack
+sourcetree
 visual-studio-code
-zoom

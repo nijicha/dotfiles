@@ -5,6 +5,7 @@ chezmoi
 curl
 doctl
 eza
+ffmpeg
 fish
 fzf
 gh
@@ -16,7 +17,9 @@ libyaml
 mas
 mise
 opencode
+openjdk
 redis
+shared-mime-info
 spark
 starship
 vips
