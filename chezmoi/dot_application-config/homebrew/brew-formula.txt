@@ -2,6 +2,7 @@ agent-browser
 awscli
 bat
 chezmoi
+cloudflared
 curl
 doctl
 eza
