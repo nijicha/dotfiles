@@ -90,6 +90,81 @@ alias zai_opencode="opencode --model zai-coding-plan/glm-5"
 # - - - - - - - - - - - - #
 #  Functions              #
 # - - - - - - - - - - - - #
+
+# ghq wrapper: `ghq get <repo>` clones flat into (ghq root)/<repo-name>
+# without the <host>/<user> directory hierarchy. Other subcommands pass
+# through to the real ghq. Supports -u/--update, --shallow, -b/--branch.
+function ghq
+    if test (count $argv) -eq 0; or test $argv[1] != get
+        command ghq $argv
+        return
+    end
+
+    set -l root (command ghq root)
+    set -l clone_args
+    set -l update false
+    set -l specs
+    set -l args $argv[2..-1]
+    set -l i 1
+    while test $i -le (count $args)
+        set -l arg $args[$i]
+        switch $arg
+            case -u --update
+                set update true
+            case --shallow
+                set -a clone_args --depth 1
+            case -b --branch
+                set i (math $i + 1)
+                set -a clone_args --branch $args[$i]
+            case --no-recursive
+                # submodules are not cloned by default; nothing to do
+            case '-*'
+                echo "ghq (flat wrapper): ignoring unsupported flag '$arg'" >&2
+            case '*'
+                set -a specs $arg
+        end
+        set i (math $i + 1)
+    end
+
+    if test (count $specs) -eq 0
+        echo "ghq get: no repository specified" >&2
+        return 1
+    end
+
+    for spec in $specs
+        set -l url $spec
+        if not string match -qr '^(https?://|git@|ssh://|git://)' $spec
+            # shorthand: user/repo or host/user/repo
+            set -l parts (string split / $spec)
+            switch (count $parts)
+                case 2
+                    set url git@github.com:$spec.git
+                case 3
+                    set url git@$parts[1]:$parts[2]/$parts[3].git
+                case '*'
+                    echo "ghq get: cannot parse '$spec'" >&2
+                    continue
+            end
+        end
+
+        set -l name (string replace -r '\.git$' '' (basename $spec))
+        set -l dst $root/$name
+
+        if test -d $dst
+            if $update
+                echo "update $dst"
+                git -C $dst pull --ff-only
+            else
+                echo "exists $dst"
+            end
+            continue
+        end
+
+        echo "clone $url -> $dst"
+        git clone $clone_args -- $url $dst
+    end
+end
+
 function get_local_ip_address
     ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print $2}'
 end
