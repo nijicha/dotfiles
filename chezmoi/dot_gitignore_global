@@ -43,3 +43,5 @@ dump.rdb
 # IDEs
 .vscode
 .idea
+
+**/.claude/settings.local.json

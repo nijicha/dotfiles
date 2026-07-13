@@ -69,6 +69,16 @@ export PATH="$PATH:$HOME/.local/bin"
 starship init fish | source ## Starship
 eval "$(/opt/homebrew/bin/brew shellenv)" ## Homebrew
 
+### mise shims (must come AFTER brew shellenv) ###
+# Put mise shims ahead of Homebrew/system bins so tool versions resolve in
+# non-interactive shells and subprocesses (pitchfork daemons, scripts, IDEs)
+# where mise's interactive prompt hook doesn't run. Without this, `bundle`
+# falls through to /usr/bin/bundle (system Ruby 2.6) and Rails crashes on
+# git-sourced gems (rails_panel "not yet checked out"). Mirrors the ~/.zshenv fix.
+if test -d $HOME/.local/share/mise/shims
+    set -gx PATH $HOME/.local/share/mise/shims $PATH
+end
+
 # - - - - - - - - - - - - #
 #  Alias                  #
 # - - - - - - - - - - - - #
