@@ -1,3 +1,31 @@
+# ~/.zshenv — sourced for ALL zsh invocations (login, interactive, scripts).
+# Keep this limited to environment/PATH that non-interactive shells also need
+# (Claude Code's Bash tool, IDEs, pitchfork daemons). Interactive-only setup
+# (aliases, prompt, completions) lives in ~/.zshrc.
+
+# - - - - - - - - - - - - #
+#  Locale                 #
+# - - - - - - - - - - - - #
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# - - - - - - - - - - - - #
+#  SDK roots              #
+# - - - - - - - - - - - - #
+### Android SDK ###
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+
+### Java ###
+# export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+
+### Docker ###
+# export DOCKER_DEFAULT_PLATFORM=linux/amd64
+# export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+
+# - - - - - - - - - - - - #
+#  mise shims             #
+# - - - - - - - - - - - - #
 # Prepend mise shims so non-interactive zsh (scripts, Claude Code's Bash tool)
 # resolves tool versions from .mise.toml instead of Homebrew's global binaries.
 # mise activate (hook-env) only runs in interactive shells; shims cover the rest.
@@ -5,3 +33,12 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"
+
+# - - - - - - - - - - - - #
+#  Puro (Flutter)         #
+# - - - - - - - - - - - - #
+# Added by the Puro installer; captured here from the live ~/.zshenv.
+export PURO_ROOT="$HOME/.puro"
+export PATH="$PATH:$HOME/.puro/bin"
+export PATH="$PATH:$HOME/.puro/shared/pub_cache/bin"
+export PATH="$PATH:$HOME/.puro/envs/default/flutter/bin"

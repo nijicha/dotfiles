@@ -26,3 +26,6 @@ starship
 vips
 watchman
 wget
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting

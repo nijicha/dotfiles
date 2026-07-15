@@ -1,0 +1,260 @@
+# ~/.zshrc — interactive shell setup. Migrated from the fish config
+# (~/.config/fish/config.fish). Environment/PATH that non-interactive shells
+# also need lives in ~/.zshenv.
+
+# Keep PATH entries unique (drops duplicates, newest wins on the left).
+typeset -U path
+
+# - - - - - - - - - - - - #
+#  Homebrew               #
+# - - - - - - - - - - - - #
+# Resolve Homebrew for the running architecture (Apple Silicon first).
+if [[ "$(uname -m)" == arm64 && -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# - - - - - - - - - - - - #
+#  Extend PATH            #
+# - - - - - - - - - - - - #
+### Android SDK ###
+if [[ -n "$ANDROID_HOME" ]]; then
+  path=("$ANDROID_HOME/emulator" "$ANDROID_HOME/platform-tools" $path)
+fi
+
+### Antigravity ###
+path=("$HOME/.antigravity/antigravity/bin" $path)
+
+### JetBrains Toolbox ###
+path=("$HOME/Library/Application Support/JetBrains/Toolbox/scripts" $path)
+
+### https://lunar.fyi / user-local bins ###
+path=($path "$HOME/.local/bin")
+
+### Google Cloud SDK (PATH only; completion registered below) ###
+if [[ -f /opt/homebrew/share/google-cloud-sdk/path.zsh.inc ]]; then
+  source /opt/homebrew/share/google-cloud-sdk/path.zsh.inc
+fi
+
+# - - - - - - - - - - - - #
+#  mise shims (after brew)#
+# - - - - - - - - - - - - #
+# Keep mise shims ahead of Homebrew/system bins so tool versions resolve even
+# outside mise's interactive hook (subprocesses, IDEs). Without this, `bundle`
+# falls through to /usr/bin/bundle (system Ruby 2.6) and Rails crashes on
+# git-sourced gems. mise activate below refreshes these per-prompt.
+if [[ -d "$HOME/.local/share/mise/shims" ]]; then
+  path=("$HOME/.local/share/mise/shims" $path)
+fi
+
+# - - - - - - - - - - - - #
+#  Completion system      #
+# - - - - - - - - - - - - #
+# Bring zsh's completion system online BEFORE anything calls `compdef`
+# (mise, gcloud, and the vite-plus env script all register completions and
+# silently no-op if compinit hasn't run yet). Runs after `brew shellenv` so
+# Homebrew's site-functions are on $fpath. `-C` skips the security recheck for
+# faster startup; drop it if completions ever look stale.
+autoload -Uz compinit
+compinit -C
+
+# Case-insensitive, then partial-word completion matching (fish matches loosely).
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' menu select              # arrow-key menu, like fish's Tab
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+
+# - - - - - - - - - - - - #
+#  History (fish-parity)  #
+# - - - - - - - - - - - - #
+# Mirror fish's history feel: large, shared across sessions, de-duplicated.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY          # instantly share history between running shells
+setopt INC_APPEND_HISTORY     # write each command as it's entered, not on exit
+setopt EXTENDED_HISTORY       # record timestamp + duration
+setopt HIST_IGNORE_ALL_DUPS   # drop older duplicates of a command
+setopt HIST_IGNORE_SPACE      # a leading space keeps a command out of history
+setopt HIST_REDUCE_BLANKS     # tidy up whitespace
+setopt HIST_VERIFY            # expand !history but let me confirm before running
+
+# - - - - - - - - - - - - #
+#  Shell options / keys   #
+# - - - - - - - - - - - - #
+unsetopt BEEP                 # fish is quiet; so are we
+setopt INTERACTIVE_COMMENTS   # allow `# comments` at an interactive prompt
+
+# fish's signature ↑/↓: search history for entries matching what's already typed.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search    # Up
+bindkey '^[[B' down-line-or-beginning-search  # Down
+bindkey '^[OA' up-line-or-beginning-search    # Up   (application cursor mode)
+bindkey '^[OB' down-line-or-beginning-search  # Down (application cursor mode)
+
+# - - - - - - - - - - - - #
+#  Binary initialization  #
+# - - - - - - - - - - - - #
+eval "$(mise activate zsh)"   ## mise
+eval "$(starship init zsh)"   ## Starship prompt
+
+# - - - - - - - - - - - - #
+#  Tool completions       #
+# - - - - - - - - - - - - #
+# These need the completion system (above) already initialized.
+
+### Google Cloud SDK ###
+if [[ -f /opt/homebrew/share/google-cloud-sdk/completion.zsh.inc ]]; then
+  source /opt/homebrew/share/google-cloud-sdk/completion.zsh.inc
+fi
+
+### Vite+ (vp) — re-source its env so the zsh completion block registers ###
+# ~/.zshenv sources this too (for PATH + the `vp` wrapper in every shell), but
+# that runs before compinit so completions are skipped there. Re-sourcing here
+# is idempotent (PATH is guarded, the wrapper is redefined identically) and now
+# `compdef` exists, so `vp`/`vpr` tab-completion registers.
+[[ -f "$HOME/.vite-plus/env" ]] && . "$HOME/.vite-plus/env"
+
+# - - - - - - - - - - - - #
+#  Plugins                #
+# - - - - - - - - - - - - #
+# Autosuggestions: fish's grey inline hint from history. Right-arrow/End accepts
+# it (same key as fish). Installed via `brew install zsh-autosuggestions`.
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
+# zsh-syntax-highlighting is sourced at the very END of this file (its requirement).
+
+# - - - - - - - - - - - - #
+#  Alias                  #
+# - - - - - - - - - - - - #
+alias ls="eza --icons=always"
+alias ll="eza --icons=always -l"
+alias la="eza --icons=always -la"
+alias tree="eza --icons=always --tree -I '.git|.idea|node_modules'"
+alias cat="bat -P"
+
+# - - - - - - - - - - - - #
+#  Personal Alias         #
+# - - - - - - - - - - - - #
+alias wsp='cd "$(ghq root)"'
+alias play='cd ~/Workspace/playground'
+
+# opencode
+alias zai_opencode="opencode --model zai-coding-plan/glm-5"
+
+# - - - - - - - - - - - - #
+#  Functions              #
+# - - - - - - - - - - - - #
+
+# ghq wrapper: `ghq get <repo>` clones flat into (ghq root)/<repo-name>
+# without the <host>/<user> directory hierarchy. Other subcommands pass
+# through to the real ghq. Supports -u/--update, --shallow, -b/--branch.
+ghq() {
+  if [[ $# -eq 0 || "$1" != get ]]; then
+    command ghq "$@"
+    return
+  fi
+  shift  # drop 'get'
+
+  local root; root="$(command ghq root)"
+  local -a clone_args specs
+  local update=false
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -u|--update)    update=true ;;
+      --shallow)      clone_args+=(--depth 1) ;;
+      -b|--branch)    shift; clone_args+=(--branch "$1") ;;
+      --no-recursive) ;;  # submodules are not cloned by default; nothing to do
+      -*)             echo "ghq (flat wrapper): ignoring unsupported flag '$1'" >&2 ;;
+      *)              specs+=("$1") ;;
+    esac
+    shift
+  done
+
+  if [[ ${#specs[@]} -eq 0 ]]; then
+    echo "ghq get: no repository specified" >&2
+    return 1
+  fi
+
+  local spec url name dst
+  local -a parts
+  for spec in "${specs[@]}"; do
+    url="$spec"
+    if [[ ! "$spec" =~ ^(https?://|git@|ssh://|git://) ]]; then
+      # shorthand: user/repo or host/user/repo
+      parts=("${(@s:/:)spec}")
+      case ${#parts[@]} in
+        2) url="git@github.com:$spec.git" ;;
+        3) url="git@${parts[1]}:${parts[2]}/${parts[3]}.git" ;;
+        *) echo "ghq get: cannot parse '$spec'" >&2; continue ;;
+      esac
+    fi
+
+    name="${${spec:t}%.git}"
+    dst="$root/$name"
+
+    if [[ -d "$dst" ]]; then
+      if $update; then
+        echo "update $dst"
+        git -C "$dst" pull --ff-only
+      else
+        echo "exists $dst"
+      fi
+      continue
+    fi
+
+    echo "clone $url -> $dst"
+    git clone "${clone_args[@]}" -- "$url" "$dst"
+  done
+}
+
+get_local_ip_address() {
+  ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print $2}'
+}
+
+colors_swatch() {
+  local i
+  for i in {0..255}; do
+    printf "\e[48;5;%sm  \e[0m\e[38;5;%sm%03d\e[0m " "$i" "$i" "$i"
+    if (( i % 6 == 3 )); then
+      echo
+    fi
+  done
+}
+
+colors_table() {
+  local T='awesome'  # The test text
+  echo -e "\n                 40m     41m     42m     43m        44m     45m     46m     47m"
+  local FGs FG BG
+  for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' '1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' '  36m' '1;36m' '  37m' '1;37m'; do
+    FG="${FGs// /}"
+    printf " %s \033[%s  %s  " "$FGs" "$FG" "$T"
+    for BG in 40m 41m 42m 43m 44m 45m 46m 47m; do
+      printf "\033[%s\033[%s  %s  \033[0m" "$FG" "$BG" "$T"
+    done
+    echo
+  done
+  echo
+}
+
+# - - - - - - - - - - - - #
+#  Development Configure  #
+# - - - - - - - - - - - - #
+
+# RSpec file size
+# ulimit -n 8192
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+#  Syntax highlighting — MUST be the LAST thing sourced (it wraps every ZLE   #
+#  widget, so anything binding widgets after it would not be highlighted).    #
+#  fish's live command coloring. Installed via `brew install                  #
+#  zsh-syntax-highlighting`.                                                   #
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR="$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/highlighters"
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
