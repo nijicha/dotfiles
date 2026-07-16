@@ -8,13 +8,13 @@
     "deny": [
       "Read(*.env)",
       "Read(**/.env.*)",
-      "Read(**/application.yml)",
-      "Bash(curl:*)"
+      "Read(**/application.yml)"
     ],
     "ask": [
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(curl:*)"
     ],
     "defaultMode": "auto"
   },
@@ -25,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -36,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -59,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -71,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -83,7 +83,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
@@ -95,7 +95,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if [ -x '/Users/maievp/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '/Users/maievp/.orca/agent-hooks/claude-hook.sh'; fi",
+            "command": "if [ -x '~/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '~/.orca/agent-hooks/claude-hook.sh'; fi",
             "timeout": 10
           }
         ]
