@@ -6,19 +6,67 @@ apps:
     url: "https://www.anycubic.com/fdmDownload"
     notes: "Slicer for 3D printers"
 
+  - name: "ArtCraft Launcher"
+    url: ""  # Fill in download URL
+    notes: ""
+
   - name: "BambuStudio"
     url: "https://bambulab.com/en/download/studio"
     notes: ""
 
-  - name: "Cloudflare WARP"
-    url: ""
+  - name: "CADCraft"
+    url: ""  # Fill in download URL
     notes: ""
 
-  - name: "CuaDriver"
+  - name: "Cloudflare WARP"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "cuup Label Print"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "DeckCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "DesignCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "EffectCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "FigCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "FilmCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "GridCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "LightCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "meetingtools"
     url: ""  # Fill in download URL
     notes: ""
 
   - name: "Orca"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "PdfCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "PhotoCraft"
     url: ""  # Fill in download URL
     notes: ""
 
@@ -34,10 +82,30 @@ apps:
     url: "https://setapp.com"
     notes: ""
 
+  - name: "SoundCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
   - name: "Steam"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "T3 Code (Beta)"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "Try Omarchy"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "VectorCraft"
     url: ""  # Fill in download URL
     notes: ""
 
   - name: "Voicemod"
     url: "https://www.voicemod.net/"
+    notes: ""
+
+  - name: "WordCraft"
+    url: ""  # Fill in download URL
     notes: ""

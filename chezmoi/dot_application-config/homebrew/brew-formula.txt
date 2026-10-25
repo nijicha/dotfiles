@@ -4,9 +4,9 @@ bat
 chezmoi
 cloudflared
 curl
+direnv
 doctl
 eza
-ffmpeg
 fish
 fzf
 gh
@@ -18,11 +18,11 @@ libyaml
 mas
 mise
 opencode
-openjdk
+python@3.14
 redis
-shared-mime-info
 spark
 starship
+tree
 vips
 watchman
 wget
