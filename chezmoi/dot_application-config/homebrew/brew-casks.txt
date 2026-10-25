@@ -2,7 +2,7 @@
 1password-cli
 affinity
 claude
-claude-code
+claude-code@latest
 clickup
 discord
 docker-desktop
@@ -35,10 +35,10 @@ obs
 onedrive
 philips-hue-sync
 raycast
-readdle-spark
 rectangle
 responsively
 session-manager-plugin
 slack
+utm
 visual-studio-code
 zoom

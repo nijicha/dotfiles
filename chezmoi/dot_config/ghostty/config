@@ -1,4 +1,6 @@
-command = /opt/homebrew/opt/fish/bin/fish
+# No `command` on purpose: Ghostty launches the account login shell as a login
+# shell, which is zsh (`chsh -s /opt/homebrew/bin/zsh`). Hardcoding a path here
+# would pin the wrong zsh on a machine where Homebrew has not run yet.
 theme = dark:CutiePro,light:GitHub-Light-Default
 font-family = CaskaydiaCove Nerd Font
 font-family-bold = CaskaydiaCove Nerd Font
