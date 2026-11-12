@@ -7,6 +7,7 @@ clickup
 discord
 docker-desktop
 figma
+folx
 font-cascadia-code-nf
 font-caskaydia-cove-nerd-font
 font-ibm-plex-sans-jp
@@ -26,8 +27,10 @@ fontforge-app
 gcloud-cli
 google-drive
 insta360-studio
+istat-menus
 iterm2
 jetbrains-toolbox
+keepingyouawake
 logi-options+
 lunar
 notion-calendar
@@ -35,10 +38,14 @@ obs
 onedrive
 philips-hue-sync
 raycast
+readdle-spark
 rectangle
 responsively
 session-manager-plugin
 slack
+snapzy
+tabularis
+thaw
 utm
 visual-studio-code
 zoom

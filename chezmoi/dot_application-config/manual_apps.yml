@@ -2,6 +2,10 @@
 # Fill in the 'url' field for each app to enable automated opening in browser
 
 apps:
+  - name: "AniCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
   - name: "AnycubicSlicer"
     url: "https://www.anycubic.com/fdmDownload"
     notes: "Slicer for 3D printers"
@@ -30,7 +34,7 @@ apps:
     url: ""  # Fill in download URL
     notes: ""
 
-  - name: "DesignCraft"
+  - name: "Edits"
     url: ""  # Fill in download URL
     notes: ""
 
@@ -51,6 +55,10 @@ apps:
     notes: ""
 
   - name: "LightCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "LINE"
     url: ""  # Fill in download URL
     notes: ""
 
@@ -78,8 +86,8 @@ apps:
     url: ""  # Fill in download URL
     notes: ""
 
-  - name: "Setapp"
-    url: "https://setapp.com"
+  - name: "SolidCraft"
+    url: ""  # Fill in download URL
     notes: ""
 
   - name: "SoundCraft"
@@ -91,6 +99,10 @@ apps:
     notes: ""
 
   - name: "T3 Code (Beta)"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "TextureCraft"
     url: ""  # Fill in download URL
     notes: ""
 
@@ -107,5 +119,9 @@ apps:
     notes: ""
 
   - name: "WordCraft"
+    url: ""  # Fill in download URL
+    notes: ""
+
+  - name: "Xcode"
     url: ""  # Fill in download URL
     notes: ""
