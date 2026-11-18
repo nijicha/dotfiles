@@ -30,6 +30,16 @@ check "zsh syntax: ~/.zshenv" zsh -n <(chezmoi cat "$HOME/.zshenv")
 check "valid JSON: ~/.claude/settings.json" jq empty "$REPO_ROOT/chezmoi/private_dot_claude/settings.json"
 check "home matches source (chezmoi verify)" chezmoi verify
 
+# This repo is public: app exports must be age-encrypted unless they're known to be safe,
+# and the age identity must never be inside the repo.
+plain_exports() {
+  cd "$REPO_ROOT/chezmoi/dot_application-config" &&
+    find . -type f ! -name 'encrypted_*' ! -name '.DS_Store' \
+      ! -path './homebrew/*' ! -path './jetbrains/*' ! -path './rectangle/*' ! -name 'manual_apps.yml'
+}
+check "app exports are encrypted" test -z "$(plain_exports)"
+check "no age identity in repo" test -z "$(grep -rlE 'AGE-SECRET-KEY-1[0-9A-Z]{20}' "$REPO_ROOT" --exclude-dir=.git 2>/dev/null)"
+
 if (( failures > 0 )); then
   echo "$failures check(s) failed. Run 'chezmoi diff' to see pending changes."
   exit 1
