@@ -56,6 +56,11 @@ fi
 # silently no-op if compinit hasn't run yet). Runs after `brew shellenv` so
 # Homebrew's site-functions are on $fpath. `-C` skips the security recheck for
 # faster startup; drop it if completions ever look stale.
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+# (Moved above compinit so a second compinit isn't needed; markers kept so
+# Docker Desktop doesn't append its block again.)
+[[ -d "$HOME/.docker/completions" ]] && fpath=("$HOME/.docker/completions" $fpath)
+# End of Docker CLI completions
 autoload -Uz compinit
 compinit -C
 
