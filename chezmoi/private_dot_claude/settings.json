@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {},
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)"
+    ],
+    "deny": [
+      "Bash(bunx wrangler *)",
+      "Bash(doctl *)",
+      "Bash(npx wrangler *)",
+      "Bash(pnpm exec wrangler *)",
+      "Bash(pnpm wrangler *)",
+      "Bash(wrangler *)",
+      "Bash(yarn wrangler *)",
+      "Read(**/.dev.vars)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/application.yml)",
+      "Read(*.env)"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true,
+    "rails-upgrade@ombulabs-ai": true,
+    "rails-load-defaults@ombulabs-ai": true,
+    "dual-boot@ombulabs-ai": true,
+    "upgrade-cleanup@ombulabs-ai": true,
+    "vercel@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "ombulabs-ai": {
+      "source": {
+        "source": "github",
+        "repo": "ombulabs/claude-skills"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
+  "theme": "auto",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f '/Users/mai/.claude/skills/impeccable/scripts/impeccable' ] || '/Users/mai/.claude/skills/impeccable/scripts/impeccable' hook",
+            "timeout": 5,
+            "statusMessage": "Preparing build session"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f '/Users/mai/.claude/skills/impeccable/scripts/impeccable' ] || '/Users/mai/.claude/skills/impeccable/scripts/impeccable' hook",
+            "timeout": 30,
+            "statusMessage": "Design deep pass"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f '/Users/mai/.claude/skills/impeccable/scripts/impeccable' ] || '/Users/mai/.claude/skills/impeccable/scripts/impeccable' hook",
+            "timeout": 5,
+            "statusMessage": "Checking UI changes"
+          }
+        ]
+      }
+    ]
+  }
+}

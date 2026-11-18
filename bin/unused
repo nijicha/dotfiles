@@ -1,240 +1,216 @@
-#!/usr/bin/env fish
+#!/usr/bin/env bash
 
-# Script to list unused applications
-# Lists apps that are not managed by:
+# List applications that are not managed by:
 # - Homebrew casks
 # - Mac App Store (mas)
 # - Manual apps list
+#
+# Written for macOS's stock bash 3.2 (no associative arrays, no ${var,,}).
+
+set -euo pipefail
 
 # Configuration
-set CHEZMOI_ROOT (chezmoi source-path)
-set BREW_CASKS_FILE "$CHEZMOI_ROOT/dot_application-config/homebrew/brew-casks.txt"
-set MAS_LIST_FILE "$CHEZMOI_ROOT/dot_application-config/homebrew/mas-list.txt"
-set MANUAL_APPS_FILE "$CHEZMOI_ROOT/dot_application-config/manual_apps.yml"
+CHEZMOI_ROOT="$(chezmoi source-path)"
+BREW_CASKS_FILE="$CHEZMOI_ROOT/dot_application-config/homebrew/brew-casks.txt"
+MAS_LIST_FILE="$CHEZMOI_ROOT/dot_application-config/homebrew/mas-list.txt"
+MANUAL_APPS_FILE="$CHEZMOI_ROOT/dot_application-config/manual_apps.yml"
 
 # System apps to ignore (macOS built-in apps)
-set SYSTEM_APPS \
-    "Safari" \
-    "Mail" \
-    "Calendar" \
-    "Contacts" \
-    "Notes" \
-    "Reminders" \
-    "Photos" \
-    "Messages" \
-    "FaceTime" \
-    "Maps" \
-    "Music" \
-    "TV" \
-    "Podcasts" \
-    "Books" \
-    "App Store" \
-    "System Preferences" \
-    "System Settings" \
-    "TextEdit" \
-    "Preview" \
-    "Calculator" \
-    "Dictionary" \
-    "Chess" \
-    "Time Machine"
+SYSTEM_APPS=(
+  "Safari"
+  "Mail"
+  "Calendar"
+  "Contacts"
+  "Notes"
+  "Reminders"
+  "Photos"
+  "Messages"
+  "FaceTime"
+  "Maps"
+  "Music"
+  "TV"
+  "Podcasts"
+  "Books"
+  "App Store"
+  "System Preferences"
+  "System Settings"
+  "TextEdit"
+  "Preview"
+  "Calculator"
+  "Dictionary"
+  "Chess"
+  "Time Machine"
+)
 
 # Special cases - apps with different cask names or installed by manager tools
 # Format: "app-name:managing-cask"
-set SPECIAL_CASES \
-    "android-studio:jetbrains-toolbox" \
-    "rubymine:jetbrains-toolbox" \
-    "rustrover:jetbrains-toolbox" \
-    "spark-desktop:readdle-spark"
+SPECIAL_CASES=(
+  "android-studio:jetbrains-toolbox"
+  "rubymine:jetbrains-toolbox"
+  "rustrover:jetbrains-toolbox"
+  "spark-desktop:readdle-spark"
+)
 
 # Color codes
-set COLOR_RESET "\033[0m"
-set COLOR_YELLOW "\033[1;33m"
-set COLOR_GREEN "\033[1;32m"
-set COLOR_BLUE "\033[1;34m"
-set COLOR_RED "\033[1;31m"
-set COLOR_GRAY "\033[0;37m"
+COLOR_RESET="\033[0m"
+COLOR_YELLOW="\033[1;33m"
+COLOR_GREEN="\033[1;32m"
+COLOR_BLUE="\033[1;34m"
+COLOR_RED="\033[1;31m"
+COLOR_GRAY="\033[0;37m"
 
 # Helper Functions
-function normalize_app_name
-    set app_name $argv[1]
-    # Remove .app extension
-    set app_name (string replace -r '\.app$' '' $app_name)
-    # Convert to lowercase and replace spaces/special chars
-    set app_name (string lower $app_name)
-    set app_name (string replace -a ' ' '-' $app_name)
-    set app_name (string replace -a '+' '' $app_name)
-    echo $app_name
-end
 
-function load_brew_casks
-    if test -f $BREW_CASKS_FILE
-        cat $BREW_CASKS_FILE | string trim
-    end
-end
+# Strip .app, lowercase, spaces -> '-', drop '+'.
+normalize_app_name() {
+  local name="${1%.app}"
+  name="$(printf '%s' "$name" | tr '[:upper:]' '[:lower:]')"
+  name="${name// /-}"
+  name="${name//+/}"
+  printf '%s\n' "$name"
+}
 
-function load_mas_apps
-    if test -f $MAS_LIST_FILE
-        # Extract app names from mas-list.txt format: "ID  AppName  (Version)"
-        cat $MAS_LIST_FILE | string trim | while read line
-            # Skip empty lines
-            if test -n "$line"
-                # Extract app name (between ID and version)
-                set app_name (echo $line | string replace -r '^\d+\s+(.+?)\s+\(.+\)$' '$1' | string trim)
-                normalize_app_name $app_name
-            end
-        end
-    end
-end
+trim() {
+  local s="$1"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s' "$s"
+}
 
-function load_manual_apps
-    if test -f $MANUAL_APPS_FILE
-        # Extract app names from YAML
-        grep -E '^\s+- name:' $MANUAL_APPS_FILE | \
-            sed -E 's/^[[:space:]]*- name:[[:space:]]*"?([^"]+)"?/\1/' | \
-            while read app_name
-                normalize_app_name $app_name
-            end
-    end
-end
+load_brew_casks() {
+  [[ -f "$BREW_CASKS_FILE" ]] || return 0
+  local line
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="$(trim "$line")"
+    [[ -n "$line" ]] && printf '%s\n' "$line"
+  done < "$BREW_CASKS_FILE"
+}
 
-function get_installed_apps
-    # Get apps from /Applications and ~/Applications
-    set apps
-    for app_path in /Applications/*.app ~/Applications/*.app
-        if test -e "$app_path"
-            set app_name (basename $app_path)
-            set apps $apps $app_name
-        end
-    end
-    # Remove duplicates and sort
-    printf '%s\n' $apps | sort -u
-end
+load_mas_apps() {
+  [[ -f "$MAS_LIST_FILE" ]] || return 0
+  local line app_name
+  # Format: "ID  AppName  (Version)"
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line="$(trim "$line")"
+    [[ -n "$line" ]] || continue
+    app_name="$(printf '%s\n' "$line" | sed -E 's/^[0-9]+[[:space:]]+(.*[^[:space:]])[[:space:]]+\(.*\)$/\1/')"
+    normalize_app_name "$(trim "$app_name")"
+  done < "$MAS_LIST_FILE"
+}
 
-function is_system_app
-    set app_name $argv[1]
-    set base_name (string replace -r '\.app$' '' $app_name)
+load_manual_apps() {
+  [[ -f "$MANUAL_APPS_FILE" ]] || return 0
+  local app_name
+  { grep -E '^[[:space:]]+- name:' "$MANUAL_APPS_FILE" || true; } |
+    sed -E 's/^[[:space:]]*- name:[[:space:]]*"?([^"]+)"?/\1/' |
+    while IFS= read -r app_name; do
+      normalize_app_name "$app_name"
+    done
+}
 
-    for sys_app in $SYSTEM_APPS
-        if test "$base_name" = "$sys_app"
-            return 0
-        end
-    end
-    return 1
-end
+get_installed_apps() {
+  local app_path
+  for app_path in /Applications/*.app "$HOME"/Applications/*.app; do
+    [[ -e "$app_path" ]] && basename "$app_path"
+  done | sort -u
+}
 
-function is_app_managed
-    set app_name $argv[1]
-    set normalized (normalize_app_name $app_name)
+is_system_app() {
+  local base_name="${1%.app}" sys_app
+  for sys_app in "${SYSTEM_APPS[@]}"; do
+    [[ "$base_name" == "$sys_app" ]] && return 0
+  done
+  return 1
+}
 
-    # Check special cases first
-    for special_case in $SPECIAL_CASES
-        set parts (string split ':' $special_case)
-        set app_pattern $parts[1]
-        set managing_cask $parts[2]
+# True when $1 and $2 are equal or either contains the other.
+fuzzy_match() {
+  [[ "$1" == "$2" || "$2" == *"$1"* || "$1" == *"$2"* ]]
+}
 
-        if test "$normalized" = "$app_pattern"
-            # Check if the managing cask is installed
-            for cask in $brew_casks
-                if test "$cask" = "$managing_cask"
-                    return 0
-                end
-            end
-        end
-    end
+is_app_managed() {
+  local normalized special_case app_pattern managing_cask cask base_name mas_app manual_app
+  normalized="$(normalize_app_name "$1")"
 
-    # Check against brew casks
-    for cask in $brew_casks
-        if test "$cask" = "$normalized"
-            return 0
-        end
-        # Also check if normalized app name contains the cask name (or vice versa)
-        if string match -q "*$cask*" "$normalized"
-            return 0
-        end
-        if string match -q "*$normalized*" "$cask"
-            return 0
-        end
-        # Check if cask contains part of the app name (for cases like "iterm2" vs "iterm")
-        set base_name (string split '-' $cask)[1]
-        if test -n "$base_name"; and string match -q "*$base_name*" "$normalized"
-            return 0
-        end
-    end
+  # Check special cases first
+  for special_case in "${SPECIAL_CASES[@]}"; do
+    app_pattern="${special_case%%:*}"
+    managing_cask="${special_case#*:}"
+    if [[ "$normalized" == "$app_pattern" ]]; then
+      for cask in ${brew_casks[@]+"${brew_casks[@]}"}; do
+        [[ "$cask" == "$managing_cask" ]] && return 0
+      done
+    fi
+  done
 
-    # Check against MAS apps
-    for mas_app in $mas_apps
-        if test "$mas_app" = "$normalized"
-            return 0
-        end
-        # Partial match for MAS apps
-        if string match -q "*$mas_app*" "$normalized"
-            return 0
-        end
-        if string match -q "*$normalized*" "$mas_app"
-            return 0
-        end
-    end
+  # Check against brew casks
+  for cask in ${brew_casks[@]+"${brew_casks[@]}"}; do
+    fuzzy_match "$cask" "$normalized" && return 0
+    # Match on the cask's first segment (e.g. "iterm2" vs "iterm")
+    base_name="${cask%%-*}"
+    [[ -n "$base_name" && "$normalized" == *"$base_name"* ]] && return 0
+  done
 
-    # Check against manual apps
-    for manual_app in $manual_apps
-        if test "$manual_app" = "$normalized"
-            return 0
-        end
-        # Partial match for manual apps
-        if string match -q "*$manual_app*" "$normalized"
-            return 0
-        end
-        if string match -q "*$normalized*" "$manual_app"
-            return 0
-        end
-    end
+  for mas_app in ${mas_apps[@]+"${mas_apps[@]}"}; do
+    fuzzy_match "$mas_app" "$normalized" && return 0
+  done
 
-    return 1
-end
+  for manual_app in ${manual_apps[@]+"${manual_apps[@]}"}; do
+    fuzzy_match "$manual_app" "$normalized" && return 0
+  done
+
+  return 1
+}
+
+# Read a command's output lines into the named array (bash 3.2 has no mapfile).
+read_lines_into() {
+  local __name="$1" __line
+  shift
+  eval "$__name=()"
+  while IFS= read -r __line; do
+    eval "$__name+=(\"\$__line\")"
+  done < <("$@")
+}
 
 # Main script
-echo -e "$COLOR_BLUE=== Loading managed apps lists ===$COLOR_RESET"
+echo -e "${COLOR_BLUE}=== Loading managed apps lists ===${COLOR_RESET}"
 
-# Load all managed apps
-set brew_casks (load_brew_casks)
-set mas_apps (load_mas_apps)
-set manual_apps (load_manual_apps)
+read_lines_into brew_casks load_brew_casks
+read_lines_into mas_apps load_mas_apps
+read_lines_into manual_apps load_manual_apps
 
-echo -e "$COLOR_GRAY- Brew casks: "(count $brew_casks)"$COLOR_RESET"
-echo -e "$COLOR_GRAY- MAS apps: "(count $mas_apps)"$COLOR_RESET"
-echo -e "$COLOR_GRAY- Manual apps: "(count $manual_apps)"$COLOR_RESET"
+echo -e "${COLOR_GRAY}- Brew casks: ${#brew_casks[@]}${COLOR_RESET}"
+echo -e "${COLOR_GRAY}- MAS apps: ${#mas_apps[@]}${COLOR_RESET}"
+echo -e "${COLOR_GRAY}- Manual apps: ${#manual_apps[@]}${COLOR_RESET}"
 echo ""
 
-# Get installed apps
-set installed_apps (get_installed_apps)
-echo -e "$COLOR_BLUE=== Scanning installed applications ===$COLOR_RESET"
-echo -e "$COLOR_GRAY- Total installed: "(count $installed_apps)"$COLOR_RESET"
+read_lines_into installed_apps get_installed_apps
+echo -e "${COLOR_BLUE}=== Scanning installed applications ===${COLOR_RESET}"
+echo -e "${COLOR_GRAY}- Total installed: ${#installed_apps[@]}${COLOR_RESET}"
 echo ""
 
-# Find unmanaged apps
-set unmanaged_apps
-set system_apps_found
-for app in $installed_apps
-    if is_system_app $app
-        set system_apps_found $system_apps_found $app
-    else if not is_app_managed $app
-        set unmanaged_apps $unmanaged_apps $app
-    end
-end
+unmanaged_apps=()
+system_apps_found=()
+for app in ${installed_apps[@]+"${installed_apps[@]}"}; do
+  if is_system_app "$app"; then
+    system_apps_found+=("$app")
+  elif ! is_app_managed "$app"; then
+    unmanaged_apps+=("$app")
+  fi
+done
 
-# Display results
-if test (count $unmanaged_apps) -gt 0
-    echo -e "$COLOR_YELLOW=== Unused/Unmanaged Applications ($COLOR_RED"(count $unmanaged_apps)"$COLOR_YELLOW) ===$COLOR_RESET"
-    echo ""
-    for app in $unmanaged_apps
-        echo -e "$COLOR_RED✗$COLOR_RESET $app"
-    end
+if (( ${#unmanaged_apps[@]} > 0 )); then
+  echo -e "${COLOR_YELLOW}=== Unused/Unmanaged Applications (${COLOR_RED}${#unmanaged_apps[@]}${COLOR_YELLOW}) ===${COLOR_RESET}"
+  echo ""
+  for app in "${unmanaged_apps[@]}"; do
+    echo -e "${COLOR_RED}✗${COLOR_RESET} $app"
+  done
 else
-    echo -e "$COLOR_GREEN=== All applications are managed! ===$COLOR_RESET"
-end
+  echo -e "${COLOR_GREEN}=== All applications are managed! ===${COLOR_RESET}"
+fi
 
 echo ""
-if test (count $system_apps_found) -gt 0
-    echo -e "$COLOR_GRAY(Excluded "(count $system_apps_found)" system apps)$COLOR_RESET"
-end
-echo -e "$COLOR_GRAY(Apps not found in brew-casks.txt, mas-list.txt, or manual_apps.yml)$COLOR_RESET"
+if (( ${#system_apps_found[@]} > 0 )); then
+  echo -e "${COLOR_GRAY}(Excluded ${#system_apps_found[@]} system apps)${COLOR_RESET}"
+fi
+echo -e "${COLOR_GRAY}(Apps not found in brew-casks.txt, mas-list.txt, or manual_apps.yml)${COLOR_RESET}"
