@@ -1,3 +1,37 @@
-#!/usr/bin/env fish
+#!/usr/bin/env bash
 
-echo Using fish $version
+# Sanity-check the dotfiles repo: script syntax, rendered shell configs,
+# JSON settings, and whether the home directory matches the source state.
+
+set -uo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+failures=0
+
+check() {
+  local label="$1"
+  shift
+  if "$@" >/dev/null 2>&1; then
+    echo "✅ $label"
+  else
+    echo "❌ $label"
+    failures=$((failures + 1))
+  fi
+}
+
+echo "Using bash $BASH_VERSION"
+
+for script in "$REPO_ROOT"/bin/*; do
+  check "bash syntax: bin/$(basename "$script")" bash -n "$script"
+done
+
+check "zsh syntax: rendered ~/.zshrc" zsh -n <(chezmoi cat "$HOME/.zshrc")
+check "zsh syntax: ~/.zshenv" zsh -n <(chezmoi cat "$HOME/.zshenv")
+check "valid JSON: ~/.claude/settings.json" jq empty "$REPO_ROOT/chezmoi/private_dot_claude/settings.json"
+check "home matches source (chezmoi verify)" chezmoi verify
+
+if (( failures > 0 )); then
+  echo "$failures check(s) failed. Run 'chezmoi diff' to see pending changes."
+  exit 1
+fi
+echo "All checks passed."

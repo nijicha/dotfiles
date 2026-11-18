@@ -1,347 +1,313 @@
-#!/usr/bin/env fish
+#!/usr/bin/env bash
 
-# Configuration
-set font_names \
-    "LINESeed" \
-    "Chonburi" \
-    "CooperBlack" \
-    "LEMONMILK" \
-    "Notedry" \
-    "'High Empathy'" \
-    "'Playful Boxes'" \
-    "'Super Kindly'"
+# Back up configs, application lists and selected fonts into the chezmoi source.
+#
+# Written for macOS's stock bash 3.2 (no associative arrays, no ${var,,}).
 
-# Helper Functions
-function clean_font_pattern
-    set pattern $argv[1]
-    set pattern (string replace -a "'" "" $pattern)
-    echo $pattern
-end
+set -uo pipefail
 
-function font_matches_pattern
-    set font_basename $argv[1]
-    set clean_pattern $argv[2]
-    string match -q "*$clean_pattern*" $font_basename
-end
+CHEZMOI_SOURCE="${CHEZMOI_SOURCE:-$HOME/.local/share/chezmoi/chezmoi}"
+HOMEBREW_DIR="$CHEZMOI_SOURCE/dot_application-config/homebrew"
+MANUAL_APPS_FILE="${MANUAL_APPS_FILE:-$CHEZMOI_SOURCE/dot_application-config/manual_apps.yml}"
 
-function is_font_managed_by_chezmoi
-    set font_file $argv[1]
-    set chezmoi_source_path (chezmoi source-path $font_file 2>/dev/null)
-    test -f "$chezmoi_source_path"
-end
+# Font families to back up (substring match against file names in ~/Library/Fonts)
+FONT_NAMES=(
+  "LINESeed"
+  "Chonburi"
+  "CooperBlack"
+  "LEMONMILK"
+  "Notedry"
+  "High Empathy"
+  "Playful Boxes"
+  "Super Kindly"
+)
 
-function find_matching_pattern
-    set font_basename $argv[1]
-    
-    for font_pattern in $font_names
-        set clean_pattern (clean_font_pattern $font_pattern)
-        if font_matches_pattern $font_basename $clean_pattern
-            echo $clean_pattern
-            return 0
-        end
-    end
+# Apps to ignore when detecting manual installs (bundled with other apps)
+IGNORE_APPS=(
+  "Google Docs"
+  "Google Sheets"
+  "Google Slides"
+  "logioptionsplus"
+)
+
+# - - - - - - - - - - - - #
+#  Helpers                #
+# - - - - - - - - - - - - #
+
+to_lower() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]'
+}
+
+# Read a command's output lines into the named array (bash 3.2 has no mapfile).
+read_lines_into() {
+  local __name="$1" __line
+  shift
+  eval "$__name=()"
+  while IFS= read -r __line; do
+    [[ -n "$__line" ]] || continue
+    eval "$__name+=(\"\$__line\")"
+  done < <("$@")
+}
+
+join_by() {
+  local sep="$1" out="" item
+  shift
+  for item in "$@"; do
+    out="${out:+$out$sep}$item"
+  done
+  printf '%s' "$out"
+}
+
+# Print the first FONT_NAMES pattern contained in $1, or fail.
+find_matching_pattern() {
+  local pattern
+  for pattern in "${FONT_NAMES[@]}"; do
+    if [[ "$1" == *"$pattern"* ]]; then
+      printf '%s' "$pattern"
+      return 0
+    fi
+  done
+  return 1
+}
+
+is_font_managed_by_chezmoi() {
+  local source_path
+  source_path="$(chezmoi source-path "$1" 2>/dev/null)" || return 1
+  [[ -f "$source_path" ]]
+}
+
+# display_font_group <title> <color> <font>...
+display_font_group() {
+  local title="$1" color="$2" pattern font
+  shift 2
+  (( $# > 0 )) || return 0
+
+  echo "$title"
+  for pattern in "${FONT_NAMES[@]}"; do
+    local pattern_fonts=()
+    for font in "$@"; do
+      [[ "$font" == *"$pattern"* ]] && pattern_fonts+=("$font")
+    done
+    if (( ${#pattern_fonts[@]} > 0 )); then
+      echo -e "\033[1;33m${pattern}*\033[0m"
+      echo -e "${color}$(join_by ", " "${pattern_fonts[@]}")\033[0m"
+      echo
+    fi
+  done
+}
+
+validate_claude_settings() {
+  local settings_file="$HOME/.claude/settings.json"
+  [[ -f "$settings_file" ]] || return 0
+
+  # 'env' must stay an empty object
+  if grep -q '"env"[[:space:]]*:[[:space:]]*{[[:space:]]*"[^"]*"' "$settings_file"; then
+    echo "⚠️  WARNING: ~/.claude/settings.json contains sensitive data in 'env' field"
+    echo "   This should NOT be backed up to git."
+    echo "   Please clear the 'env' field before backing up, or add to .gitignore"
     return 1
-end
+  fi
 
-function display_font_group
-    set font_list $argv[1..-3]
-    set group_title $argv[-2]
-    set color_code $argv[-1]
-    
-    if test (count $font_list) -gt 0
-        echo $group_title
-        
-        # Group fonts by pattern
-        for font_pattern in $font_names
-            set clean_pattern (clean_font_pattern $font_pattern)
-            set pattern_fonts
-            
-            # Find fonts that match this pattern
-            for font in $font_list
-                if font_matches_pattern $font $clean_pattern
-                    set pattern_fonts $pattern_fonts $font
-                end
-            end
-            
-            # Print pattern group if fonts found
-            if test (count $pattern_fonts) -gt 0
-                # Brown bold for wildcard pattern
-                echo -e "\033[1;33m$clean_pattern*\033[0m"
-                # Color for font basenames
-                echo -e "$color_code"(string join ", " $pattern_fonts)"\033[0m"
-                echo
-            end
-        end
-    end
-end
+  if grep -qiE '(api[_-]?key|password|token|secret|credential)' "$settings_file"; then
+    echo "⚠️  WARNING: ~/.claude/settings.json may contain credentials"
+    echo "   Please review before backing up"
+    return 1
+  fi
 
-function validate_claude_settings
-    set settings_file ~/.claude/settings.json
+  return 0
+}
 
-    if not test -f "$settings_file"
-        return 0  # File doesn't exist, nothing to validate
-    end
+# Lowercase, drop spaces and hyphens, drop a trailing "app"/"desktop".
+normalize_app_name() {
+  local name
+  name="$(to_lower "$1")"
+  name="${name// /}"
+  name="${name//-/}"
+  name="${name%app}"
+  [[ "$name" == *desktop ]] && name="${name%desktop}"
+  printf '%s' "$name"
+}
 
-    # Check if env field contains actual values (not empty object)
-    if grep -q '"env"[[:space:]]*:[[:space:]]*{[[:space:]]*"[^"]*"' "$settings_file"
-        echo "⚠️  WARNING: ~/.claude/settings.json contains sensitive data in 'env' field"
-        echo "   This should NOT be backed up to git."
-        echo "   Please clear the 'env' field before backing up, or add to .gitignore"
-        return 1
-    end
+# Print "url|notes" for an app already listed in manual_apps.yml.
+get_existing_app_data() {
+  local app_name="$1" file="$2"
+  [[ -f "$file" ]] || { echo "|"; return 1; }
+  awk -v needle="name: \"$app_name\"" '
+    index($0, needle) { in_app = 1; url = ""; next }
+    in_app && /^[[:space:]]+- name:/ { exit }
+    in_app && /url:/ {
+      url = $0; sub(/.*url:[[:space:]]*"/, "", url); sub(/".*/, "", url)
+    }
+    in_app && /notes:/ {
+      notes = $0; sub(/.*notes:[[:space:]]*"/, "", notes); sub(/".*/, "", notes)
+      print url "|" notes; found = 1; exit
+    }
+    END { if (!found) print "|" }
+  ' "$file"
+}
 
-    # Check for common credential patterns that shouldn't be there
-    if grep -qiE '(api[_-]?key|password|token|secret|credential)' "$settings_file"
-        echo "⚠️  WARNING: ~/.claude/settings.json may contain credentials"
-        echo "   Please review before backing up"
-        return 1
-    end
+# - - - - - - - - - - - - #
+#  Backup steps           #
+# - - - - - - - - - - - - #
 
-    return 0
-end
+backup_configs() {
+  echo "Backing up mise, starship & Claude settings"
+  chezmoi add "$HOME/.config/mise/"
+  chezmoi add "$HOME/.config/starship.toml"
 
-function backup_configs
-    echo "Backing up Ghostty, mise, starship & Claude settings"
-    chezmoi add ~/.config/ghostty/
-    chezmoi add ~/.config/mise/
-    chezmoi add ~/.config/starship.toml
+  if validate_claude_settings; then
+    chezmoi add "$HOME/.claude/settings.json"
+  else
+    echo "Skipped ~/.claude/settings.json due to validation warnings"
+    return 1
+  fi
+}
 
-    # Validate Claude settings before backing up
-    if validate_claude_settings
-        chezmoi add ~/.claude/settings.json
+backup_applications_config() {
+  echo "Backing up application configs"
+  chezmoi add "$HOME/.application-config/"
+}
+
+backup_homebrew() {
+  echo "Backing up Homebrew (formula, casks, mas)"
+  brew leaves > "$HOMEBREW_DIR/brew-formula.txt"
+  brew list --cask > "$HOMEBREW_DIR/brew-casks.txt"
+  mas list > "$HOMEBREW_DIR/mas-list.txt"
+}
+
+backup_manual_apps() {
+  echo "Detecting manually installed apps..."
+
+  local temp_file
+  temp_file="$(mktemp)" || { echo "Error: Failed to create temporary file"; return 1; }
+  chmod 600 "$temp_file"
+
+  local cask_apps=() mas_apps=()
+  read_lines_into cask_apps brew list --cask
+  read_lines_into mas_apps sh -c "mas list 2>/dev/null | awk '{\$1=\"\"; print \$0}' | sed -e 's/^ *//' -e 's/ *(.*//' -e 's/\\.app\$//'"
+
+  {
+    echo "# Manual Applications (not installed via Homebrew or Mac App Store)"
+    echo "# Fill in the 'url' field for each app to enable automated opening in browser"
+    echo ""
+    echo "apps:"
+  } > "$temp_file"
+
+  local manual_count=0 first_app=true
+  local app_path app_name normalized_app is_manual ignore_app cask mas_app normalized existing url notes
+
+  for app_path in /Applications/*.app; do
+    [[ -d "$app_path" ]] || continue
+
+    app_name="$(basename "$app_path" .app)"
+    normalized_app="$(normalize_app_name "$app_name")"
+    is_manual=true
+
+    for ignore_app in "${IGNORE_APPS[@]}"; do
+      if [[ "$app_name" == "$ignore_app" ]]; then
+        is_manual=false
+        break
+      fi
+    done
+
+    if $is_manual; then
+      for cask in ${cask_apps[@]+"${cask_apps[@]}"}; do
+        normalized="$(normalize_app_name "$cask")"
+        if [[ "$normalized_app" == *"$normalized"* || "$normalized" == *"$normalized_app"* ]]; then
+          is_manual=false
+          break
+        fi
+      done
+    fi
+
+    if $is_manual; then
+      for mas_app in ${mas_apps[@]+"${mas_apps[@]}"}; do
+        normalized="$(normalize_app_name "$mas_app")"
+        if [[ "$normalized_app" == *"$normalized"* || "$normalized" == *"$normalized_app"* ]]; then
+          is_manual=false
+          break
+        fi
+      done
+    fi
+
+    $is_manual || continue
+    manual_count=$((manual_count + 1))
+
+    $first_app || echo "" >> "$temp_file"
+    first_app=false
+
+    existing="$(get_existing_app_data "$app_name" "$MANUAL_APPS_FILE")"
+    url="${existing%%|*}"
+    notes="${existing#*|}"
+
+    echo "  - name: \"$app_name\"" >> "$temp_file"
+    if [[ -n "$url" ]]; then
+      echo "    url: \"$url\"" >> "$temp_file"
     else
-        echo "Skipped ~/.claude/settings.json due to validation warnings"
-        return 1
-    end
-end
+      echo "    url: \"\"  # Fill in download URL" >> "$temp_file"
+    fi
+    echo "    notes: \"$notes\"" >> "$temp_file"
+  done
 
-function backup_applications_config
-    echo "Backing up application configs"
-    chezmoi add ~/.application-config/
-end
+  mv -f "$temp_file" "$MANUAL_APPS_FILE"
 
-function backup_homebrew
-    echo "Backing up Homebrew (formula, casks, mas)"
-    set homebrew_dir ~/.local/share/chezmoi/chezmoi/dot_application-config/homebrew
+  echo "Found $manual_count manually installed apps"
+  echo "Saved to: $MANUAL_APPS_FILE"
+  echo
+}
 
-    brew leaves > "$homebrew_dir/brew-formula.txt"
-    brew list --cask > "$homebrew_dir/brew-casks.txt"
-    mas list > "$homebrew_dir/mas-list.txt"
-end
+process_fonts() {
+  echo "Backing up fonts..."
+  echo
 
-function normalize_app_name
-    set name $argv[1]
-    # Convert to lowercase, remove spaces and hyphens, remove common suffixes
-    echo $name | string lower | string replace -a ' ' '' | string replace -a '-' '' | string replace -r '(app|desktop)$' ''
-end
+  local managed_fonts=() added_fonts=() font_file font_basename
+  for font_file in "$HOME"/Library/Fonts/*; do
+    [[ -f "$font_file" ]] || continue
+    font_basename="$(basename "$font_file")"
+    find_matching_pattern "$font_basename" >/dev/null || continue
 
-function get_existing_app_data
-    set app_name $argv[1]
-    set manual_apps_file $argv[2]
+    if is_font_managed_by_chezmoi "$font_file"; then
+      managed_fonts+=("$font_basename")
+    else
+      chezmoi add "$font_file"
+      added_fonts+=("$font_basename")
+    fi
+  done
 
-    if test -f "$manual_apps_file"
-        # Extract URL and notes for this app from existing file
-        set in_app false
-        set url ""
-        set notes ""
+  display_font_group "Fonts already managed by chezmoi:" "\033[34m" ${managed_fonts[@]+"${managed_fonts[@]}"}
+  display_font_group "Added fonts:" "\033[32m" ${added_fonts[@]+"${added_fonts[@]}"}
 
-        for line in (cat "$manual_apps_file")
-            if string match -q "*name: \"$app_name\"*" $line
-                set in_app true
-            else if test $in_app = true
-                if string match -q "*url:*" $line
-                    set url (string replace -r '.*url: *"([^"]*)".*' '$1' $line)
-                else if string match -q "*notes:*" $line
-                    set notes (string replace -r '.*notes: *"([^"]*)".*' '$1' $line)
-                    echo "$url|$notes"
-                    return 0
-                else if string match -q "  - name:" $line
-                    # Started new app entry
-                    break
-                end
-            end
-        end
-    end
+  check_missing_patterns
+}
 
-    echo "|"
-    return 1
-end
+check_missing_patterns() {
+  local pattern font_file found
+  for pattern in "${FONT_NAMES[@]}"; do
+    found=false
+    for font_file in "$HOME"/Library/Fonts/*; do
+      if [[ -f "$font_file" && "$(basename "$font_file")" == *"$pattern"* ]]; then
+        found=true
+        break
+      fi
+    done
+    $found || echo -e "No fonts found matching pattern: \033[31m${pattern}\033[0m"
+  done
+}
 
-function backup_manual_apps
-    echo "Detecting manually installed apps..."
+main() {
+  echo "Starting backup process..."
 
-    set manual_apps_file ~/.local/share/chezmoi/chezmoi/dot_application-config/manual_apps.yml
-    set temp_file (mktemp)
+  # Each step reports its own failure; keep going like the original script.
+  backup_configs || true
+  backup_applications_config || true
+  backup_homebrew || true
+  backup_manual_apps || true
+  process_fonts
 
-    # Verify temp file was created successfully
-    if test -z "$temp_file"
-        echo "Error: Failed to create temporary file"
-        return 1
-    end
+  echo "Backup completed!"
+}
 
-    # Set restrictive permissions on temp file
-    chmod 600 "$temp_file"
-
-    # Apps to ignore (bundled with other apps or system apps)
-    set ignore_apps \
-        "Google Docs" \
-        "Google Sheets" \
-        "Google Slides" \
-        "logioptionsplus"
-
-    # Get lists of managed apps
-    set cask_apps (brew list --cask 2>/dev/null)
-    set mas_apps (mas list 2>/dev/null | awk '{$1=""; print $0}' | sed 's/^ *//' | sed 's/ *(.*//' | sed 's/\.app$//')
-
-    # Start YAML file
-    echo "# Manual Applications (not installed via Homebrew or Mac App Store)" > $temp_file
-    echo "# Fill in the 'url' field for each app to enable automated opening in browser" >> $temp_file
-    echo "" >> $temp_file
-    echo "apps:" >> $temp_file
-
-    set manual_count 0
-    set first_app true
-
-    # Check each app in /Applications
-    for app_path in /Applications/*.app
-        if not test -d $app_path
-            continue
-        end
-
-        set app_name (basename $app_path .app)
-        set normalized_app (normalize_app_name $app_name)
-        set is_manual true
-
-        # Check if app is in ignore list
-        for ignore_app in $ignore_apps
-            if test "$app_name" = "$ignore_app"
-                set is_manual false
-                break
-            end
-        end
-
-        # Check if installed by Homebrew cask
-        if test $is_manual = true
-            for cask in $cask_apps
-                set normalized_cask (normalize_app_name $cask)
-                # Check both directions: if cask contains app or app contains cask
-                if string match -q "*$normalized_cask*" $normalized_app; or string match -q "*$normalized_app*" $normalized_cask
-                    set is_manual false
-                    break
-                end
-            end
-        end
-
-        # Check if installed by mas
-        if test $is_manual = true
-            for mas_app in $mas_apps
-                set normalized_mas (normalize_app_name $mas_app)
-                if string match -q "*$normalized_mas*" $normalized_app; or string match -q "*$normalized_app*" $normalized_mas
-                    set is_manual false
-                    break
-                end
-            end
-        end
-
-        # If manual, add to YAML
-        if test $is_manual = true
-            set manual_count (math $manual_count + 1)
-
-            # Add blank line before entry (except for first entry)
-            if test $first_app = false
-                echo "" >> "$temp_file"
-            end
-            set first_app false
-
-            # Get existing URL and notes if available
-            set existing_data (get_existing_app_data "$app_name" "$manual_apps_file")
-            set url (string split "|" $existing_data)[1]
-            set notes (string split "|" $existing_data)[2]
-
-            echo "  - name: \"$app_name\"" >> "$temp_file"
-            if test -n "$url"
-                echo "    url: \"$url\"" >> "$temp_file"
-            else
-                echo "    url: \"$url\"  # Fill in download URL" >> "$temp_file"
-            end
-            echo "    notes: \"$notes\"" >> "$temp_file"
-        end
-    end
-
-    # Move temp file to final location (atomic operation)
-    mv -f "$temp_file" "$manual_apps_file"
-
-    echo "Found $manual_count manually installed apps"
-    echo "Saved to: $manual_apps_file"
-    echo
-end
-
-function process_fonts
-    echo "Backing up fonts..."
-    echo
-    
-    set managed_fonts
-    set added_fonts
-    
-    # Process each font file
-    for font_file in ~/Library/Fonts/*
-        if not test -f "$font_file"
-            continue
-        end
-
-        set font_basename (basename "$font_file")
-        set matching_pattern (find_matching_pattern "$font_basename")
-
-        if test $status -eq 0
-            if is_font_managed_by_chezmoi "$font_file"
-                set managed_fonts $managed_fonts $font_basename
-            else
-                chezmoi add "$font_file"
-                set added_fonts $added_fonts $font_basename
-            end
-        end
-    end
-    
-    # Display results with original colors
-    display_font_group $managed_fonts "Fonts already managed by chezmoi:" "\033[34m"
-    display_font_group $added_fonts "Added fonts:" "\033[32m"
-    
-    check_missing_patterns
-end
-
-function check_missing_patterns
-    for font_pattern in $font_names
-        set clean_pattern (clean_font_pattern "$font_pattern")
-        set found false
-
-        for font_file in ~/Library/Fonts/*
-            if test -f "$font_file"
-                set font_basename (basename "$font_file")
-                if font_matches_pattern "$font_basename" "$clean_pattern"
-                    set found true
-                    break
-                end
-            end
-        end
-
-        if test $found = false
-            echo -e "No fonts found matching pattern: \033[31m$font_pattern\033[0m"
-        end
-    end
-end
-
-# Main execution
-function main
-    echo "Starting backup process..."
-
-    backup_configs
-    backup_applications_config
-    backup_homebrew
-    backup_manual_apps
-    process_fonts
-
-    echo "Backup completed!"
-end
-
-# Run main function
-main
+# Allow `source bin/backup` to load the functions without running a backup.
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  main "$@"
+fi
