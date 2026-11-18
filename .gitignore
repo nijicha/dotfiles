@@ -8,6 +8,6 @@ dot_DS_Store?
 .idea/
 
 # Claude
-chezmoi/dot_claude/*
-!chezmoi/dot_claude/settings.json
-!chezmoi/dot_claude/statusline-command.sh
+chezmoi/private_dot_claude/*
+!chezmoi/private_dot_claude/settings.json
+!chezmoi/private_dot_claude/statusline-command.sh
