@@ -1,0 +1,3 @@
+# Target paths relative to $HOME (no leading ~/). See https://www.chezmoi.io/reference/special-files/chezmoiignore/
+**/.DS_Store
+**/._*
