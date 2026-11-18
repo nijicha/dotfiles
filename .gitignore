@@ -11,3 +11,7 @@ dot_DS_Store?
 chezmoi/private_dot_claude/*
 !chezmoi/private_dot_claude/settings.json
 !chezmoi/private_dot_claude/statusline-command.sh
+
+# age identity for encrypted_ files: lives in ~/.config/chezmoi/key.txt + 1Password, never here
+key.txt
+*.agekey

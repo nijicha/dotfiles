@@ -22,6 +22,13 @@ FONT_NAMES=(
   "Super Kindly"
 )
 
+# Font families whose license (SIL OFL) allows redistribution. Every other font in
+# FONT_NAMES is stored age-encrypted, because this repo is public.
+OPEN_FONTS=(
+  "LINESeed"
+  "Chonburi"
+)
+
 # Apps to ignore when detecting manual installs (bundled with other apps)
 IGNORE_APPS=(
   "Google Docs"
@@ -66,6 +73,14 @@ find_matching_pattern() {
       printf '%s' "$pattern"
       return 0
     fi
+  done
+  return 1
+}
+
+is_open_font() {
+  local pattern
+  for pattern in "${OPEN_FONTS[@]}"; do
+    [[ "$1" == *"$pattern"* ]] && return 0
   done
   return 1
 }
@@ -165,7 +180,17 @@ backup_configs() {
 
 backup_applications_config() {
   echo "Backing up application configs"
-  chezmoi add "$HOME/.application-config/"
+  # re-add keeps the encrypted_ attribute; a plain `chezmoi add` of the folder would
+  # offer to store encrypted files in plain text in this public repo.
+  chezmoi re-add "$HOME/.application-config"
+
+  # New exports are encrypted by default: app exports can hold tokens, hosts, device IDs.
+  local path
+  while IFS= read -r path; do
+    [[ -n "$path" && "$(basename "$path")" != .DS_Store ]] || continue
+    echo "Adding new app config (encrypted): ~/$path"
+    chezmoi add --encrypt "$HOME/$path"
+  done < <(chezmoi unmanaged "$HOME/.application-config")
 }
 
 backup_homebrew() {
@@ -268,9 +293,13 @@ process_fonts() {
 
     if is_font_managed_by_chezmoi "$font_file"; then
       managed_fonts+=("$font_basename")
-    else
+    elif is_open_font "$font_basename"; then
       chezmoi add "$font_file"
       added_fonts+=("$font_basename")
+    else
+      # Not known to allow redistribution: keep it out of the public repo in plain form.
+      chezmoi add --encrypt "$font_file"
+      added_fonts+=("$font_basename (encrypted)")
     fi
   done
 

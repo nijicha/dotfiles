@@ -1,8 +1,8 @@
-{{- $name := "Nathakorn C" -}}
-{{- $email := "nathakorn.tonch@gmail.com" -}}
-{{- $github_user := "nijicha" -}}
-{{- $signing_key := default "PLEASE_INSERT_YOUR_SIGNING_KEY" -}}
-
+{{- /* Keep values already in ~/.config/chezmoi/chezmoi.yaml; defaults only for a fresh init. */ -}}
+{{- $name := get . "name" | default "Nathakorn C" -}}
+{{- $email := get . "email" | default "12441214+nijicha@users.noreply.github.com" -}}
+{{- $github_user := get . "github_user" | default "nijicha" -}}
+{{- $signing_key := get . "signing_key" | default "PLEASE_INSERT_YOUR_SIGNING_KEY" -}}
 {{- if (env "ASK") }}
 {{-   $name = promptString "Full Name" $name -}}
 {{-   $email = promptString "Email" $email -}}
@@ -23,3 +23,11 @@ edit:
 diff:
   command: delta
   pager: delta
+
+# Files with the encrypted_ prefix are age-encrypted (chezmoi's built-in age).
+# The identity (private key) is NOT in this repo: restore it from 1Password to
+# ~/.config/chezmoi/key.txt before `chezmoi apply` on a new Mac.
+encryption: age
+age:
+  identity: {{ joinPath .chezmoi.homeDir ".config/chezmoi/key.txt" | quote }}
+  recipient: "age1sfjgn5qddpfayjcpe700zerl9qma50qzj0k7m9f6p9dm7tsp4gnsrw6sze"

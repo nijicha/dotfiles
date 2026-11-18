@@ -98,7 +98,7 @@ This repository uses chezmoi's templating system for personalization:
 - **`.chezmoiroot`**: Points to `./chezmoi` subdirectory (not the repository root). chezmoi special files (`.chezmoiignore`, `.chezmoi.yaml.tmpl`, …) must live in `chezmoi/`, not the repo root.
 - **`.chezmoiignore`**: Patterns match target paths relative to `$HOME` (no `~/`), and only affect files that exist in the source state.
 - **Template files** (`.tmpl` extension): Use Go templating with variables defined in `.chezmoi.yaml.tmpl`
-- **Data variables**: `name`, `email`, `github_user`, `signing_key` can be prompted during initial setup with `ASK=1` environment variable
+- **Data variables**: `name`, `email`, `github_user`, `signing_key` can be prompted during initial setup with `ASK=1` environment variable. The template keeps values already in `~/.config/chezmoi/chezmoi.yaml`, so re-running `chezmoi init` doesn't reset them to the defaults. Default email is the GitHub noreply address.
 - **Prefixes**:
   - `dot_` → `.` (hidden files)
   - `private_` → restricted permissions
@@ -132,6 +132,8 @@ All scripts are bash and must stay compatible with macOS's stock bash 3.2 (no as
 - Detects manually installed apps by comparing `/Applications/*.app` against managed lists
 - Backs up specific fonts matching patterns: LINESeed, Chonburi, CooperBlack, LEMONMILK, etc.
 - Preserves existing URLs and notes in `manual_apps.yml` when regenerating
+- Uses `chezmoi re-add` for `~/.application-config` so encrypted files stay encrypted; new app exports are added with `--encrypt`
+- Fonts outside `OPEN_FONTS` (SIL OFL families) are added with `--encrypt`
 - Can be sourced (`source bin/backup`) to load its functions without running a backup; `MANUAL_APPS_FILE` overrides the output path for testing
 
 **`bin/unused`**:
@@ -144,6 +146,8 @@ All scripts are bash and must stay compatible with macOS's stock bash 3.2 (no as
 - `bash -n` on every `bin/` script, `zsh -n` on the rendered `~/.zshrc` and `~/.zshenv`
 - `jq empty` on the Claude settings JSON
 - `chezmoi verify` (fails if the home directory differs from the source state)
+- App exports under `dot_application-config/` are encrypted (allowlist: homebrew/, jetbrains/, rectangle/, manual_apps.yml)
+- No age private key anywhere in the repo
 
 ### Security Considerations
 
@@ -151,6 +155,7 @@ All scripts are bash and must stay compatible with macOS's stock bash 3.2 (no as
 - **File permissions**: `private_` prefix ensures restrictive permissions on sensitive files (e.g. `~/.claude` stays 700)
 - **URL validation**: Setup script only allows `http://` and `https://` URLs for manual apps
 - **Temp file security**: Backup script sets `chmod 600` on temporary files
+- **Public repo + age encryption**: The GitHub repo is public. App exports (Raycast, iStat Menus, iTerm2) and non-OFL fonts are stored as `encrypted_*.age` using chezmoi's built-in age. Recipient is in `.chezmoi.yaml.tmpl`; the identity is `~/.config/chezmoi/key.txt` (backed up in 1Password) and must never be committed. Never `chezmoi add` an encrypted target without `--encrypt` (use `chezmoi re-add`), or it is stored in plain text.
 - **Claude settings**: `permissions.deny` blocks reading `.env*`, `.dev.vars`, `application.yml` and running `wrangler`/`doctl`. Project-specific `autoMode` context belongs in that project's `.claude/settings.local.json`, not the global settings.
 
 ### Shell Configuration
